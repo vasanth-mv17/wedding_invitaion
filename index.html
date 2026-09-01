@@ -732,168 +732,24 @@ const prefs = {
 
 
 /* =====================================================================
-   3) BACKGROUND MUSIC — bowed violin melody over a veena-style drone
-   -----------------------------------------------------------------
-   No external audio file is bundled here (real veena/violin
-   recordings findable online are commercial catalog tracks, not
-   something safe to embed), so this synthesizes a more refined,
-   "classical Carnatic recital" pair of layers instead of the
-   nadaswaram/tavil processional sound used before:
-
-   - A veena-style drone: the same Pa–Sa–Sa–Sa tanpura tuning (a
-     perfect fifth plus two octaves of the tonic) as before, but each
-     "string" now uses a mellower, more damped pluck — shorter decay,
-     darker filter — closer to a veena's plucked resonance than a
-     tanpura's long shimmer.
-   - A bowed violin-style melodic phrase (raga Mohanam: Sa Ri Ga Pa
-     Dha Sa, ascending then descending), with a slow bow-attack and
-     overlapping, sustained notes (legato) instead of the short,
-     breathy reed notes used before, plus a wider, slower vibrato
-     characteristic of a bowed string.
-
-   Kept at a fixed gentle volume overall (no slider, per earlier
-   request).
-
-   TO USE A REAL AUDIO FILE INSTEAD:
-   swap this whole block for an <audio id="bg-music" src="your-loop.mp3"
-   loop></audio> element, and control it with audioEl.play() and
-   audioEl.pause(). An actual veena/violin recording will sound far
-   more authentic than this synthesis — it's here only as a
-   dependency-free placeholder.
+   3) BACKGROUND MUSIC — Remo (First Sight Background Score)
+   ---------------------------------------------------------------------
+   Add this file beside the HTML:
+     remo-first-sight-background-score.mp3
+   The Enter Invitation button starts playback after the user's gesture.
    ===================================================================== */
-const FIXED_VOLUME = 0.05; // gentle, fixed ceiling — edit this single number to change loudness
+const FIXED_VOLUME = 0.18;
 
-let audioCtx = null;
-let masterGain = null;
-let filter = null;
-let melodyFilter = null;
-let melodyGain = null;
+const audioEl = document.createElement('audio');
+audioEl.id = 'bg-music';
+audioEl.src = 'remo-first-sight-background-score.mp3';
+audioEl.loop = true;
+audioEl.preload = 'auto';
+audioEl.volume = FIXED_VOLUME;
+audioEl.setAttribute('aria-hidden', 'true');
+document.body.appendChild(audioEl);
+
 let isPlaying = false;
-let pluckTimers = [];
-let melodyTimer = null;
-
-// Pa (fifth below tonic), Sa, Sa (octave up), Sa (octave up again) —
-// classical tuning, tonic C3 = 130.81 Hz. Decay times are shorter
-// than the earlier tanpura version so the strings feel plucked and
-// damped, veena-style, rather than left to ring and shimmer.
-const STRINGS = [
-  { freq: 196.00, period: 2600, decay: 1.5 }, // Pa
-  { freq: 130.81, period: 2200, decay: 1.7 }, // Sa
-  { freq: 261.63, period: 2000, decay: 1.3 }, // Sa (octave)
-  { freq: 261.63, period: 2400, decay: 1.4 }  // Sa (octave, desynced)
-];
-
-// Raga Mohanam (the pentatonic scale most associated with auspicious
-// South Indian occasions): Sa Ri Ga Pa Dha, ascending then descending
-// back down, one octave starting at C4. Slower gap between notes
-// than before to leave room for each bowed note to sustain and
-// overlap into the next (legato), rather than the earlier staccato
-// reed phrasing.
-const MELODY_NOTES = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 440.00, 392.00, 329.63, 293.66];
-const NOTE_GAP_MS = 620;   // time between successive notes in the phrase
-const PHRASE_REST_MS = 6500; // silence between repeats of the phrase
-
-
-function pluck(freq, decaySeconds) {
-  const osc = audioCtx.createOscillator();
-  osc.type = 'sawtooth'; // harmonically rich, then softened by the filter — closer to a plucked string than a pure tone
-  osc.frequency.value = freq;
-
-  const stringGain = audioCtx.createGain();
-  const now = audioCtx.currentTime;
-  stringGain.gain.setValueAtTime(0.0001, now);
-  stringGain.gain.exponentialRampToValueAtTime(1, now + 0.03);       // fast pluck attack
-  stringGain.gain.exponentialRampToValueAtTime(0.0001, now + decaySeconds); // slow natural decay
-
-  osc.connect(stringGain);
-  stringGain.connect(filter);
-  osc.start(now);
-  osc.stop(now + decaySeconds + 0.1);
-}
-
-function playViolinNote(freq) {
-  const osc = audioCtx.createOscillator();
-  osc.type = 'sawtooth'; // harmonically rich, then warmed by the lowpass filter into a bowed-string tone
-
-  // A slower, wider pitch wobble than a reed instrument — this is
-  // what reads as a bow-driven vibrato rather than a breath-driven
-  // one.
-  const vibrato = audioCtx.createOscillator();
-  vibrato.frequency.value = 5.5;
-  const vibratoDepth = audioCtx.createGain();
-  vibratoDepth.gain.value = 6;
-  vibrato.connect(vibratoDepth);
-  vibratoDepth.connect(osc.frequency);
-
-  osc.frequency.value = freq;
-
-  const noteGain = audioCtx.createGain();
-  const now = audioCtx.currentTime;
-  const noteDuration = 0.85; // long enough to overlap into the next note's attack, for legato bowing
-  noteGain.gain.setValueAtTime(0.0001, now);
-  noteGain.gain.exponentialRampToValueAtTime(1, now + 0.16);  // slow bow-draw attack, not a pluck or breath-tongue
-  noteGain.gain.exponentialRampToValueAtTime(0.0001, now + noteDuration);
-
-  osc.connect(noteGain);
-  noteGain.connect(melodyFilter);
-  osc.start(now);
-  vibrato.start(now);
-  osc.stop(now + noteDuration + 0.1);
-  vibrato.stop(now + noteDuration + 0.1);
-}
-
-function initAudio() {
-  if (audioCtx) return;
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-  masterGain = audioCtx.createGain();
-  masterGain.gain.value = FIXED_VOLUME;
-  masterGain.connect(audioCtx.destination);
-
-  filter = audioCtx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.frequency.value = 1600; // darker cutoff than before — damped, veena-style drone rather than a bright, ringing tanpura
-  filter.connect(masterGain);
-
-  melodyGain = audioCtx.createGain();
-  melodyGain.gain.value = 1.4; // the melody sits slightly above the drone in the mix, as a lead voice should
-  melodyGain.connect(masterGain);
-
-  melodyFilter = audioCtx.createBiquadFilter();
-  melodyFilter.type = 'lowpass';
-  melodyFilter.frequency.value = 3200; // brighter than the drone filter — violin overtones read as warm rather than muffled
-  melodyFilter.connect(melodyGain);
-}
-
-function playPhrase() {
-  MELODY_NOTES.forEach((freq, i) => {
-    setTimeout(() => playViolinNote(freq), i * NOTE_GAP_MS);
-  });
-  const phraseLength = MELODY_NOTES.length * NOTE_GAP_MS;
-  melodyTimer = setTimeout(playPhrase, phraseLength + PHRASE_REST_MS);
-}
-
-function startMelody() {
-  playPhrase();
-}
-
-function stopMelody() {
-  clearTimeout(melodyTimer);
-  melodyTimer = null;
-}
-
-function startDrone() {
-  STRINGS.forEach(s => {
-    pluck(s.freq, s.decay); // pluck immediately
-    const timer = setInterval(() => pluck(s.freq, s.decay), s.period);
-    pluckTimers.push(timer);
-  });
-}
-
-function stopDrone() {
-  pluckTimers.forEach(clearInterval);
-  pluckTimers = [];
-}
 
 const musicToggle = document.getElementById('music-toggle');
 const musicIcon = document.getElementById('music-icon');
@@ -904,25 +760,39 @@ const ICON_PAUSE = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
 function updateMusicUI() {
   musicIcon.innerHTML = isPlaying ? ICON_PAUSE : ICON_PLAY;
   musicToggle.setAttribute('aria-pressed', String(isPlaying));
-  musicToggle.setAttribute('aria-label', isPlaying ? 'Pause background music' : 'Play background music');
+  musicToggle.setAttribute(
+    'aria-label',
+    isPlaying ? 'Pause background music' : 'Play background music'
+  );
+}
+
+async function playBackgroundMusic() {
+  try {
+    await audioEl.play();
+    isPlaying = true;
+    updateMusicUI();
+    prefs.set('musicPlaying', true);
+  } catch (error) {
+    console.warn('Background music could not be started:', error);
+    isPlaying = false;
+    updateMusicUI();
+  }
+}
+
+function pauseBackgroundMusic() {
+  audioEl.pause();
+  isPlaying = false;
+  updateMusicUI();
+  prefs.set('musicPlaying', false);
 }
 
 musicToggle.addEventListener('click', async () => {
-  initAudio();
-  if (audioCtx.state === 'suspended') await audioCtx.resume();
-
-  isPlaying = !isPlaying;
-  if (isPlaying) {
-    startDrone();
-    startMelody();
+  if (audioEl.paused) {
+    await playBackgroundMusic();
   } else {
-    stopDrone();
-    stopMelody();
+    pauseBackgroundMusic();
   }
-  updateMusicUI();
-  prefs.set('musicPlaying', isPlaying);
 });
-
 
 /* =====================================================================
    4) ENTRANCE GATE — parts the curtains, reveals the invitation
@@ -946,15 +816,7 @@ async function openGate() {
   // Start the music on this same gesture, exactly as if the music
   // button itself had been clicked, so the site doesn't need a
   // second click just to unlock audio.
-  initAudio();
-  if (audioCtx.state === 'suspended') await audioCtx.resume();
-  if (!isPlaying) {
-    isPlaying = true;
-    startDrone();
-    startMelody();
-    updateMusicUI();
-    prefs.set('musicPlaying', true);
-  }
+  await playBackgroundMusic();
 
   gate.classList.add('is-open');
 
