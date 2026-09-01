@@ -371,6 +371,190 @@
   }
   .lang-ta .our-story__quote { font-family: 'Noto Sans Tamil', sans-serif; font-style: normal; }
 
+  /* ============ COUNTDOWN TIMER ============ */
+  .countdown {
+    position: relative;
+    overflow: hidden;
+    padding: 86px 24px 92px;
+    text-align: center;
+    color: var(--ivory);
+    background:
+      radial-gradient(circle at 50% 45%, rgba(201,161,94,0.12), transparent 38%),
+      linear-gradient(180deg, #3d0c13 0%, var(--maroon-deep) 100%);
+    isolation: isolate;
+  }
+
+  .countdown::before {
+    content: "";
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(201,161,94,0.28);
+    pointer-events: none;
+  }
+
+  .countdown__content {
+    position: relative;
+    z-index: 2;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .countdown__heart {
+    color: var(--gold);
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .countdown__kicker {
+    font-family: 'Marcellus', serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(251,243,228,0.72);
+    margin-bottom: 16px;
+  }
+
+  .lang-ta .countdown__kicker,
+  .lang-ta .countdown__headline,
+  .lang-ta .countdown__status { font-family: 'Noto Sans Tamil', sans-serif; }
+
+  .countdown__headline {
+    font-family: 'Alex Brush', cursive;
+    font-weight: 400;
+    font-size: clamp(42px, 8vw, 70px);
+    line-height: 1.15;
+    color: var(--gold-bright);
+    text-shadow: 0 0 22px rgba(228,197,136,0.28);
+    margin-bottom: 14px;
+  }
+
+  .countdown__date {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: rgba(251,243,228,0.78);
+    margin-bottom: 30px;
+  }
+
+  .countdown__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+
+  .countdown__unit {
+    position: relative;
+    min-width: 0;
+    padding: 24px 12px 20px;
+    border: 1px solid rgba(201,161,94,0.36);
+    border-radius: 16px;
+    background: rgba(25,5,9,0.22);
+    backdrop-filter: blur(4px);
+    transform: translate3d(var(--parallax-x, 0), var(--parallax-y, 0), 0);
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .countdown__unit:hover {
+    border-color: rgba(228,197,136,0.58);
+    background: rgba(25,5,9,0.32);
+  }
+
+  .countdown__number {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 8vw, 66px);
+    line-height: .9;
+    font-weight: 500;
+    color: var(--gold-bright);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 16px rgba(228,197,136,0.16);
+  }
+
+  .countdown__label {
+    display: block;
+    margin-top: 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(251,243,228,0.62);
+  }
+
+  .lang-ta .countdown__label {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+
+  .countdown__status {
+    min-height: 22px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--gold-bright);
+  }
+
+  .countdown__particles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .countdown__particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold-bright);
+    box-shadow: 0 0 10px 2px rgba(228,197,136,0.42);
+    opacity: 0;
+    animation: countdownParticle var(--particle-duration) var(--particle-delay) ease-in-out infinite;
+  }
+
+  @keyframes countdownParticle {
+    0% { opacity: 0; transform: translate3d(0, 20px, 0) scale(.5); }
+    18% { opacity: .65; }
+    70% { opacity: .28; }
+    100% { opacity: 0; transform: translate3d(var(--particle-drift), -130px, 0) scale(1.15); }
+  }
+
+  /* Music control comes alive very subtly while the score is playing. */
+  .music-control { position: relative; }
+  .music-control.is-playing::after {
+    content: "";
+    position: absolute;
+    right: -5px;
+    bottom: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold-bright);
+    box-shadow: 0 0 0 0 rgba(228,197,136,0.45);
+    animation: musicPulse 1.8s ease-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes musicPulse {
+    0% { box-shadow: 0 0 0 0 rgba(228,197,136,0.42); opacity: .9; }
+    70% { box-shadow: 0 0 0 9px rgba(228,197,136,0); opacity: .55; }
+    100% { box-shadow: 0 0 0 0 rgba(228,197,136,0); opacity: .9; }
+  }
+
+  @media (max-width: 620px) {
+    .countdown { padding: 74px 18px 82px; }
+    .countdown::before { inset: 10px; }
+    .countdown__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .countdown__unit { padding: 22px 10px 18px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .countdown__unit { transform: none !important; }
+    .countdown__particle { animation: none !important; opacity: .22; }
+    .music-control.is-playing::after { animation: none !important; }
+  }
+  
   /* ============ HERO ============ */
   .hero {
     min-height: 100svh;
@@ -694,6 +878,37 @@
     </div>
   </section>
 
+     <section class="countdown" id="countdown" aria-labelledby="countdown-headline">
+    <div class="countdown__particles" id="countdown-particles" aria-hidden="true"></div>
+    <div class="countdown__content">
+      <div class="countdown__heart" aria-hidden="true">&#9825;</div>
+      <div class="countdown__kicker" data-i18n="countdownKicker">the countdown</div>
+      <h2 class="countdown__headline" id="countdown-headline" data-i18n="countdownHeadline">Until We Say &ldquo;I Do&rdquo;</h2>
+      <div class="countdown__date" data-i18n="countdownDate">Sunday, October 18, 2026 · 11:30 AM</div>
+
+      <div class="countdown__grid" role="timer" aria-live="off" aria-label="Wedding countdown">
+        <div class="countdown__unit">
+          <span class="countdown__number" id="timer-days">00</span>
+          <span class="countdown__label" data-i18n="timerDays">Days</span>
+        </div>
+        <div class="countdown__unit">
+          <span class="countdown__number" id="timer-hours">00</span>
+          <span class="countdown__label" data-i18n="timerHours">Hours</span>
+        </div>
+        <div class="countdown__unit">
+          <span class="countdown__number" id="timer-minutes">00</span>
+          <span class="countdown__label" data-i18n="timerMinutes">Minutes</span>
+        </div>
+        <div class="countdown__unit">
+          <span class="countdown__number" id="timer-seconds">00</span>
+          <span class="countdown__label" data-i18n="timerSeconds">Seconds</span>
+        </div>
+      </div>
+
+      <div class="countdown__status" id="countdown-status" aria-live="polite"></div>
+    </div>
+  </section>
+
   <div class="wrap">
     <section id="when">
       <div class="label" data-i18n="whenLabel">when</div>
@@ -755,7 +970,17 @@ const translations = {
     ourStoryHeadline: "Two hearts. One beautiful<br>beginning.",
     ourStoryBody: "From a beautiful beginning to a lifetime together, we are grateful to share this special chapter with the people we love.",
     ourStoryQuote1: "&ldquo;Two hearts, two lives, one beautiful promise &mdash; to walk together through every season of life.&rdquo;",
-    ourStoryQuote2: "&ldquo;May your home always be filled with laughter, your hearts with peace, and your journey with love.&rdquo;"
+    ourStoryQuote2: "&ldquo;May your home always be filled with laughter, your hearts with peace, and your journey with love.&rdquo;",
+    countdownKicker: "the countdown",
+    countdownHeadline: "Until We Say &ldquo;I Do&rdquo;",
+    countdownDate: "Sunday, October 18, 2026 · 11:30 AM",
+    timerDays: "Days",
+    timerHours: "Hours",
+    timerMinutes: "Minutes",
+    timerSeconds: "Seconds",
+    countdownLive: "Counting down to our special day",
+    countdownToday: "Today is the day — our celebration begins!",
+    countdownPast: "Our special day has arrived — thank you for celebrating with us."
   },
   ta: {
     kicker: "எங்கள் இதயங்களில் மகிழ்ச்சியுடன்ு",
@@ -781,7 +1006,17 @@ const translations = {
     ourStoryHeadline: "இரு இதயங்கள். ஒரு அழகிய<br>தொடக்கம்.",
     ourStoryBody: "ஓர் அழகிய தொடக்கத்திலிருந்து வாழ்நாள் முழுவதும் இணைந்திருக்க, எங்கள் அன்பான அனைவருடனும் இந்தச் சிறப்பு தருணத்தைப் பகிர்ந்துகொள்வதில் நாங்கள் மகிழ்ச்சி அடைகிறோம்.",
     ourStoryQuote1: "&ldquo;இரு இதயங்கள், இரு வாழ்க்கைகள், ஒரு அழகிய வாக்குறுதி &mdash; வாழ்வின் ஒவ்வொரு பருவத்திலும் இணைந்து நடப்போம்.&rdquo;",
-    ourStoryQuote2: "&ldquo;உங்கள் இல்லம் எப்போதும் சிரிப்பாலும், உங்கள் இதயங்கள் அமைதியாலும், உங்கள் பயணம் அன்பாலும் நிறைந்திருக்கட்டும்.&rdquo;"
+    ourStoryQuote2: "&ldquo;உங்கள் இல்லம் எப்போதும் சிரிப்பாலும், உங்கள் இதயங்கள் அமைதியாலும், உங்கள் பயணம் அன்பாலும் நிறைந்திருக்கட்டும்.&rdquo;",
+    countdownKicker: "திருமண நாளுக்கான கவுண்ட்டவுன்",
+    countdownHeadline: "&ldquo;ஆம்&rdquo; என்று சொல்லும் நாள் வரை",
+    countdownDate: "ஞாயிறு, அக்டோபர் 18, 2026 · காலை 11:30",
+    timerDays: "நாட்கள்",
+    timerHours: "மணிநேரம்",
+    timerMinutes: "நிமிடங்கள்",
+    timerSeconds: "விநாடிகள்",
+    countdownLive: "எங்கள் சிறப்பு நாளை நோக்கி கவுண்ட்டவுன்",
+    countdownToday: "இன்றுதான் அந்த நாள் — எங்கள் கொண்டாட்டம் தொடங்குகிறது!",
+    countdownPast: "எங்கள் சிறப்பு நாள் வந்துவிட்டது — எங்களுடன் கொண்டாடியதற்கு நன்றி."
   }
 };
 
