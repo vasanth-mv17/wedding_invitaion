@@ -294,6 +294,83 @@
     .gate.is-open .gate__curtain--right { transform: scaleX(-1) translateX(-102%); }
   }
 
+   /* ============ OUR STORY ============ */
+  .our-story {
+    background: var(--maroon-deep);
+    color: var(--ivory);
+    padding: 90px 24px;
+    text-align: center;
+  }
+  .our-story__inner { max-width: 700px; margin: 0 auto; }
+ 
+  .our-story__heart {
+    color: var(--gold);
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+ 
+  .our-story__kicker {
+    font-family: 'Marcellus', serif;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(251,243,228,0.75);
+    margin-bottom: 22px;
+  }
+  .lang-ta .our-story__kicker { font-family: 'Noto Sans Tamil', sans-serif; letter-spacing: 0.02em; text-transform: none; }
+ 
+  .our-story__headline {
+    font-family: 'Alex Brush', cursive;
+    font-weight: 400;
+    font-size: clamp(40px, 8vw, 68px);
+    line-height: 1.25;
+    color: var(--gold-bright);
+    text-shadow: 0 0 22px rgba(228,197,136,0.35);
+    margin-bottom: 30px;
+  }
+  /* Alex Brush has no Tamil glyphs, so Tamil falls back to the same
+     italic serif used for the gate/quotes rather than tofu boxes. */
+  .lang-ta .our-story__headline {
+    font-family: 'Noto Sans Tamil', sans-serif;
+    font-weight: 600;
+    font-size: clamp(28px, 6vw, 42px);
+    text-shadow: none;
+  }
+ 
+  .our-story__body {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.75;
+    color: rgba(251,243,228,0.85);
+    max-width: 560px;
+    margin: 0 auto 44px;
+  }
+  .lang-ta .our-story__body { font-family: 'Noto Sans Tamil', sans-serif; }
+ 
+  .our-story__quotes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    text-align: center;
+  }
+  @media (max-width: 620px) {
+    .our-story__quotes { grid-template-columns: 1fr; }
+  }
+ 
+  .our-story__quote {
+    margin: 0;
+    padding: 30px 24px;
+    border: 1px solid rgba(201,161,94,0.4);
+    border-radius: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(251,243,228,0.9);
+  }
+  .lang-ta .our-story__quote { font-family: 'Noto Sans Tamil', sans-serif; font-style: normal; }
+
   /* ============ HERO ============ */
   .hero {
     min-height: 100svh;
@@ -606,6 +683,19 @@
     
   </section>
 
+     <section class="our-story" id="our-story">
+    <div class="our-story__inner">
+      <div class="our-story__heart" aria-hidden="true">&#9825;</div>
+      <div class="our-story__kicker" data-i18n="ourStoryKicker">our story</div>
+      <h2 class="our-story__headline" data-i18n="ourStoryHeadline">Two hearts. One beautiful<br>beginning.</h2>
+      <p class="our-story__body" data-i18n="ourStoryBody">From a beautiful beginning to a lifetime together, we are grateful to share this special chapter with the people we love.</p>
+      <div class="our-story__quotes">
+        <blockquote class="our-story__quote" data-i18n="ourStoryQuote1">&ldquo;Two hearts, two lives, one beautiful promise &mdash; to walk together through every season of life.&rdquo;</blockquote>
+        <blockquote class="our-story__quote" data-i18n="ourStoryQuote2">&ldquo;May your home always be filled with laughter, your hearts with peace, and your journey with love.&rdquo;</blockquote>
+      </div>
+    </div>
+  </section>
+
   <div class="wrap">
     <section id="when">
       <div class="label" data-i18n="whenLabel">when</div>
@@ -662,7 +752,12 @@ const translations = {
     gateSave: "save the date",
     gateDate: "18 October 2026",
     gateEnter: "Enter Invitation",
-    gateTagline: "Two hearts, one beautiful journey.<br>A lifetime of love begins&hellip;"
+    gateTagline: "Two hearts, one beautiful journey.<br>A lifetime of love begins&hellip;",
+    ourStoryKicker: "our story",
+    ourStoryHeadline: "Two hearts. One beautiful<br>beginning.",
+    ourStoryBody: "From a beautiful beginning to a lifetime together, we are grateful to share this special chapter with the people we love.",
+    ourStoryQuote1: "&ldquo;Two hearts, two lives, one beautiful promise &mdash; to walk together through every season of life.&rdquo;",
+    ourStoryQuote2: "&ldquo;May your home always be filled with laughter, your hearts with peace, and your journey with love.&rdquo;"
   },
   ta: {
     kicker: "எங்கள் இதயங்களில் மகிழ்ச்சியுடன்ு",
@@ -683,7 +778,12 @@ const translations = {
     gateSave: "இந்நாளை நினைவில் வையுங்கள்",
     gateDate: "18 அக்டோபர் 2026",
     gateEnter: "அழைப்பிதழைத் திற",
-    gateTagline: "இரு இதயங்கள், ஒரு அழகிய பயணம்.<br>ஒரு வாழ்நாள் காதல் தொடங்குகிறது&hellip;"
+    gateTagline: "இரு இதயங்கள், ஒரு அழகிய பயணம்.<br>ஒரு வாழ்நாள் காதல் தொடங்குகிறது&hellip;",
+     ourStoryKicker: "எங்கள் கதை",
+    ourStoryHeadline: "இரு இதயங்கள். ஒரு அழகிய<br>தொடக்கம்.",
+    ourStoryBody: "ஓர் அழகிய தொடக்கத்திலிருந்து வாழ்நாள் முழுவதும் இணைந்திருக்க, எங்கள் அன்பான அனைவருடனும் இந்தச் சிறப்பு தருணத்தைப் பகிர்ந்துகொள்வதில் நாங்கள் மகிழ்ச்சி அடைகிறோம்.",
+    ourStoryQuote1: "&ldquo;இரு இதயங்கள், இரு வாழ்க்கைகள், ஒரு அழகிய வாக்குறுதி &mdash; வாழ்வின் ஒவ்வொரு பருவத்திலும் இணைந்து நடப்போம்.&rdquo;",
+    ourStoryQuote2: "&ldquo;உங்கள் இல்லம் எப்போதும் சிரிப்பாலும், உங்கள் இதயங்கள் அமைதியாலும், உங்கள் பயணம் அன்பாலும் நிறைந்திருக்கட்டும்.&rdquo;"
   }
 };
 
