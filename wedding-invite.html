@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arshak & Hajeera — October 18, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!--
+  Noto Sans Tamil is loaded alongside the Latin display faces so Tamil
+  glyphs render correctly (shaping, vowel signs, ligatures) instead of
+  falling back to tofu boxes or a mismatched system font.
+-->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Marcellus&family=Jost:wght@300;400;500&family=Noto+Sans+Tamil:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --maroon-deep: #4A0F16;
+    --maroon: #6B1B24;
+    --gold: #C9A15E;
+    --gold-bright: #E4C588;
+    --cream: #FBF3E4;
+    --ivory: #F6EAD3;
+    --ink: #2B1810;
+    --ink-soft: #7A5C4A;
+    --anim-fast: 0.2s;
+    --anim-med: 0.5s;
+    --anim-slow: 1.1s;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Tamil needs its own font stack — Latin serif/sans faces have no
+     Tamil glyphs at all, so [lang="ta"] content is pinned to Noto Sans
+     Tamil regardless of which element it lands in. */
+  [lang="ta"], .lang-ta [data-i18n] {
+    font-family: 'Noto Sans Tamil', sans-serif;
+  }
+
+  /* ============ REDUCED MOTION ============
+     Every animation in this file is wrapped so it collapses to an
+     instant, static state when the user has asked the OS for reduced
+     motion. Nothing moves, nothing fades-in-over-time. */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 32px; }
+
+  /* ============ CONTROL BAR ============ */
+  .control-bar {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(74, 15, 22, 0.85);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(201,161,94,0.4);
+    border-radius: 999px;
+    padding: 8px 10px;
+  }
+
+  .lang-toggle {
+    display: flex;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid rgba(201,161,94,0.5);
+  }
+
+  .lang-btn {
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--gold-bright);
+    background: transparent;
+    border: none;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: background var(--anim-fast) ease, color var(--anim-fast) ease;
+  }
+
+  .lang-btn[aria-pressed="true"] {
+    background: var(--gold);
+    color: var(--maroon-deep);
+  }
+
+  .lang-btn:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+
+  .music-control { display: flex; align-items: center; gap: 8px; }
+
+  .music-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,161,94,0.5);
+    background: transparent;
+    color: var(--gold-bright);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background var(--anim-fast) ease, transform var(--anim-fast) ease;
+  }
+  .music-toggle:hover { background: rgba(201,161,94,0.2); }
+  .music-toggle:active { transform: scale(0.92); }
+  .music-toggle:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
+  .music-toggle svg { width: 15px; height: 15px; }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 90px 34px 70px;
+    position: relative;
+    background: var(--maroon-deep);
+    color: var(--ivory);
+    overflow: hidden;
+    opacity: 0;
+    animation: heroPanelFade 0.6s ease-out forwards;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(201,161,94,0.55);
+    pointer-events: none;
+    opacity: 0;
+    animation: heroPanelFade 0.8s ease-out 0.5s forwards;
+  }
+
+  @keyframes heroPanelFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ============ HERO ENTRANCE SEQUENCE ============
+     One orchestrated reveal on load: the corner frame draws itself in
+     first (see .corner path/circle below), then each line of text
+     arrives in turn, ending with the scroll cue. Nothing here repeats
+     or loops except the small scroll-arrow bob, which only starts
+     once the sequence has finished. */
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero .bismillah,
+  .hero .kicker,
+  .hero .names,
+  .hero .motif-divider,
+  .hero .hero-date,
+  .hero .scroll-hint {
+    opacity: 0;
+    animation: heroFadeUp 0.9s ease-out forwards;
+  }
+  .hero .bismillah      { animation-delay: 0.15s; }
+  .hero .kicker         { animation-delay: 0.45s; }
+  .hero .names          { animation-delay: 0.75s; }
+  .hero .motif-divider  { animation-delay: 1.15s; }
+  .hero .hero-date      { animation-delay: 1.4s; }
+  .hero .scroll-hint    { animation-delay: 1.65s; }
+
+  .corner { position: absolute; width: 74px; height: 74px; opacity: 0.85; }
+  .corner.tl { top: 22px; left: 22px; }
+  .corner.tr { top: 22px; right: 22px; transform: scaleX(-1); }
+  .corner.bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
+  .corner.br { bottom: 22px; right: 22px; transform: scale(-1,-1); }
+
+  /* Each corner's linework draws itself in like a pen stroke
+     (stroke-dashoffset 1 → 0, using pathLength="1" on the <path>
+     elements so the animation works the same regardless of each
+     path's actual length), and its dot fades in once the stroke
+     reaches it. The four corners are lightly staggered so the frame
+     feels hand-drawn rather than four identical clones firing at once. */
+  @keyframes drawCorner { to { stroke-dashoffset: 0; } }
+  @keyframes fadeInDot { to { opacity: 1; } }
+
+  .corner path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: drawCorner 1.1s ease-out forwards;
+  }
+  .corner circle {
+    opacity: 0;
+    animation: fadeInDot 0.35s ease-out forwards;
+  }
+
+  .corner.tl path { animation-delay: 0.1s; }
+  .corner.tl circle { animation-delay: 1.1s; }
+  .corner.tr path { animation-delay: 0.28s; }
+  .corner.tr circle { animation-delay: 1.28s; }
+  .corner.bl path { animation-delay: 0.46s; }
+  .corner.bl circle { animation-delay: 1.46s; }
+  .corner.br path { animation-delay: 0.64s; }
+  .corner.br circle { animation-delay: 1.64s; }
+
+  .motif-divider { display: flex; align-items: center; justify-content: center; margin: 30px 0; }
+  .motif-divider .stem {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .kicker {
+    font-family: 'Marcellus', serif;
+    font-size: 13px;
+    letter-spacing: 0.32em;
+    color: var(--gold-bright);
+    margin-bottom: 26px;
+    text-transform: lowercase;
+  }
+  .lang-ta .kicker { letter-spacing: 0.02em; text-transform: none; }
+
+  .bismillah {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--gold-bright);
+    margin-bottom: 22px;
+    opacity: 0.9;
+  }
+
+  .names {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(54px, 13vw, 96px);
+    line-height: 1.05;
+    color: var(--ivory);
+  }
+  .lang-ta .names { font-family: 'Noto Sans Tamil', sans-serif; font-weight: 600; font-size: clamp(38px, 9vw, 64px); }
+
+  .names .amp {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+    display: block;
+    font-size: 0.48em;
+    margin: 10px 0;
+  }
+
+  .hero-date {
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    color: var(--ivory);
+    opacity: 0.85;
+    margin-top: 8px;
+  }
+  .lang-ta .hero-date { font-family: 'Noto Sans Tamil', sans-serif; letter-spacing: 0.02em; }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--gold-bright);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .scroll-hint > span:first-child { opacity: 0.6; }
+
+  /* The arrow inherits the .scroll-hint fade-in (see the shared rule
+     above), then — once that's finished — starts a small, slow,
+     continuous bob as an ongoing invitation to scroll. This is the one
+     looping motion on the page, and it's subtle by design. */
+  @keyframes arrowBob {
+    from { transform: translateY(0); }
+    to   { transform: translateY(5px); }
+  }
+  .scroll-arrow {
+    font-size: 13px;
+    opacity: 0.55;
+    animation: arrowBob 1.6s ease-in-out 2.6s infinite alternate;
+  }
+
+  /* ============ CONTENT REVEAL (scroll-triggered) ============
+     Sections start slightly lower and transparent, then animate to
+     their resting position once they cross into the viewport. Driven
+     by an IntersectionObserver toggling .is-visible (see script). */
+  section {
+    padding: 90px 0;
+    border-top: 1px solid rgba(201,161,94,0.35);
+    position: relative;
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity var(--anim-med) ease-out, transform var(--anim-med) ease-out;
+  }
+  section.is-visible { opacity: 1; transform: translateY(0); }
+
+  .label {
+    font-family: 'Marcellus', serif;
+    font-size: 13px;
+    letter-spacing: 0.24em;
+    color: var(--maroon);
+    text-transform: lowercase;
+    margin-bottom: 20px;
+  }
+  .lang-ta .label { font-family: 'Noto Sans Tamil', sans-serif; letter-spacing: 0.02em; text-transform: none; }
+
+  .label::before {
+    content: "";
+    display: inline-block;
+    width: 18px; height: 1px;
+    background: var(--gold);
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+
+  .when { display: flex; align-items: baseline; gap: 30px; }
+
+  .when-day {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 112px;
+    line-height: 0.82;
+    color: var(--maroon);
+  }
+
+  .when-info { font-size: 17px; line-height: 1.95; color: var(--ink); }
+  .lang-ta .when-info { font-family: 'Noto Sans Tamil', sans-serif; }
+
+  .when-info .big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 25px;
+    font-style: italic;
+    color: var(--maroon);
+  }
+  .lang-ta .when-info .big { font-family: 'Noto Sans Tamil', sans-serif; font-style: normal; font-weight: 600; }
+
+  .venue-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 40px;
+    font-style: italic;
+    color: var(--maroon);
+    margin-bottom: 16px;
+  }
+  .lang-ta .venue-name { font-family: 'Noto Sans Tamil', sans-serif; font-style: normal; font-size: 30px; }
+
+  .venue-address { font-size: 16px; line-height: 1.9; color: var(--ink-soft); max-width: 46ch; }
+  .lang-ta .venue-address { font-family: 'Noto Sans Tamil', sans-serif; }
+
+  .venue-note { font-size: 14px; color: var(--ink-soft); margin-top: 6px; }
+
+  .map-link {
+    display: inline-block;
+    margin-top: 28px;
+    font-size: 14px;
+    color: var(--maroon);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 3px;
+    transition: opacity var(--anim-fast) ease, transform var(--anim-fast) ease;
+  }
+  .map-link:hover { opacity: 0.65; transform: translateX(2px); }
+  .map-link:focus-visible { outline: 2px solid var(--maroon); outline-offset: 4px; }
+
+  footer {
+    text-align: center;
+    padding: 64px 0 54px;
+    border-top: 1px solid rgba(201,161,94,0.35);
+    background: var(--maroon-deep);
+  }
+
+  .footer-names { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 22px; color: var(--gold-bright); }
+  .lang-ta .footer-names { font-family: 'Noto Sans Tamil', sans-serif; font-style: normal; }
+
+  @media (max-width: 480px) {
+    .when { gap: 18px; }
+    .when-day { font-size: 78px; }
+    .venue-name { font-size: 31px; }
+    .corner { width: 52px; height: 52px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ CONTROL BAR: language + music ============ -->
+  <div class="control-bar">
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button class="lang-btn" id="lang-en" aria-pressed="true">EN</button>
+      <button class="lang-btn" id="lang-ta" aria-pressed="false">தமிழ்</button>
+    </div>
+    <div class="music-control">
+      <button class="music-toggle" id="music-toggle" aria-pressed="false" aria-label="Play background music">
+        <svg id="music-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <svg class="corner tl" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
+    <svg class="corner tr" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
+    <svg class="corner bl" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
+    <svg class="corner br" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
+
+    <div class="bismillah">بسم الله الرحمن الرحيم</div>
+    <div class="kicker" data-i18n="kicker">together with their families</div>
+    <h1 class="names" data-i18n="names">Arshak<span class="amp">&amp;</span>Hajeera</h1>
+    <div class="motif-divider"><div class="stem"></div></div>
+    <div class="hero-date" data-i18n="heroDate">Sunday, October 18, 2026 · 11:30 AM</div>
+    <div class="scroll-hint">
+      <span data-i18n="scrollHint">scroll</span>
+      <span class="scroll-arrow" aria-hidden="true">⌄</span>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section id="when">
+      <div class="label" data-i18n="whenLabel">when</div>
+      <div class="when">
+        <div class="when-day">18</div>
+        <div class="when-info">
+          <span data-i18n="whenLine1">Sunday</span><br>
+          <span class="big" data-i18n="whenMonth">October</span> <span data-i18n="whenYear">2026</span><br>
+          <span data-i18n="whenLine2">Ceremony begins at 11:30 AM</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="venue">
+      <div class="label" data-i18n="whereLabel">where</div>
+      <div class="venue-name" data-i18n="venueName">MS Mahal</div>
+      <div class="venue-address">
+        <span data-i18n="venueAddress">Old No. 41, New No. 48, C.P. Kovil Street, Royapettah,<br>Chennai – 600 014</span>
+        <div class="venue-note" data-i18n="venueNote">(Opp. Amir Mahal, near Express Avenue)</div>
+      </div>
+      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=MS+Mahal+CP+Kovil+Street+Royapettah+Chennai" target="_blank" rel="noopener" data-i18n="mapLink">View on map</a>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-names">Arshak &amp; Hajeera</div>
+  </footer>
+
+<script>
+/* =====================================================================
+   1) LANGUAGE TOGGLE (EN / TA)
+   ===================================================================== */
+const translations = {
+  en: {
+    kicker: "together with their families",
+    names: 'Arshak<span class="amp">&amp;</span>Hajeera',
+    heroDate: "Sunday, October 18, 2026 · 11:30 AM",
+    scrollHint: "scroll",
+    whenLabel: "when",
+    whenLine1: "Sunday",
+    whenMonth: "October",
+    whenYear: "2026",
+    whenLine2: "Ceremony begins at 11:30 AM",
+    whereLabel: "where",
+    venueName: "MS Mahal",
+    venueAddress: "Old No. 41, New No. 48, C.P. Kovil Street, Royapettah,<br>Chennai – 600 014",
+    venueNote: "(Opp. Amir Mahal, near Express Avenue)",
+    mapLink: "View on map"
+  },
+  ta: {
+    kicker: "தங்கள் குடும்பத்தினருடன் இணைந்து",
+    names: 'அர்ஷக்<span class="amp">&amp;</span>ஹஜீரா',
+    heroDate: "ஞாயிறு, அக்டோபர் 18, 2026 · காலை 11:30",
+    scrollHint: "கீழே செல்ல",
+    whenLabel: "எப்போது",
+    whenLine1: "ஞாயிறு",
+    whenMonth: "அக்டோபர்",
+    whenYear: "2026",
+    whenLine2: "விழா காலை 11:30 மணிக்குத் தொடங்கும்",
+    whereLabel: "எங்கே",
+    venueName: "எம்.எஸ். மஹால்",
+    venueAddress: "பழைய எண். 41, புதிய எண். 48, சி.பி. கோவில் தெரு, ராயப்பேட்டை,<br>சென்னை – 600 014",
+    venueNote: "(அமீர் மஹாலுக்கு எதிரே, எக்ஸ்பிரஸ் அவென்யூ அருகில்)",
+    mapLink: "வரைபடத்தில் காண்க"
+  }
+};
+
+const langEnBtn = document.getElementById('lang-en');
+const langTaBtn = document.getElementById('lang-ta');
+
+function setLanguage(lang) {
+  const dict = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.documentElement.lang = lang;
+  document.body.classList.toggle('lang-ta', lang === 'ta');
+  langEnBtn.setAttribute('aria-pressed', String(lang === 'en'));
+  langTaBtn.setAttribute('aria-pressed', String(lang === 'ta'));
+  prefs.set('language', lang);
+}
+
+langEnBtn.addEventListener('click', () => setLanguage('en'));
+langTaBtn.addEventListener('click', () => setLanguage('ta'));
+
+
+/* =====================================================================
+   2) PREFERENCE PERSISTENCE
+   -----------------------------------------------------------------
+   Claude.ai artifacts run in a sandbox that blocks localStorage, so
+   this file uses an in-memory store — preferences persist while the
+   tab is open, but reset on reload here.
+
+   TO USE REAL localStorage WHEN YOU HOST THIS FILE YOURSELF:
+   replace the three method bodies below with the localStorage calls
+   shown in the comments. That's the only change needed.
+   ===================================================================== */
+const prefs = {
+  _store: {},
+  get(key, fallback) {
+    // return localStorage.getItem(key) ?? fallback;
+    return key in this._store ? this._store[key] : fallback;
+  },
+  set(key, value) {
+    // localStorage.setItem(key, value);
+    this._store[key] = value;
+  }
+};
+
+
+/* =====================================================================
+   3) BACKGROUND MUSIC — nadaswaram over a tanpura-style drone
+   -----------------------------------------------------------------
+   No external audio file is bundled here (the nadaswaram recordings
+   findable online are commercial catalog tracks, not something safe
+   to embed), so this synthesizes the two layers that define Tamil
+   wedding music instead:
+
+   - A tanpura-style drone: four "strings" tuned Pa–Sa–Sa–Sa (a
+     perfect fifth plus two octaves of the tonic), each periodically
+     "plucked" with a fast attack and slow decay on a loosely
+     desynced cycle, rather than held flat — this is what gives a
+     tanpura its shimmering, living quality.
+   - A soft nadaswaram-style melodic phrase (raga Mohanam: Sa Ri Ga
+     Pa Dha Sa, ascending then descending) played on a reed-like
+     vibrato tone, looping with a rest between phrases, sitting
+     quietly above the drone.
+
+   Kept at a fixed gentle volume overall (no slider, per earlier
+   request).
+
+   TO USE A REAL AUDIO FILE INSTEAD:
+   swap this whole block for an <audio id="bg-music" src="your-loop.mp3"
+   loop></audio> element, and control it with audioEl.play() and
+   audioEl.pause(). An actual nadaswaram/tavil recording will sound
+   far more authentic than this synthesis — it's here only as a
+   dependency-free placeholder.
+   ===================================================================== */
+const FIXED_VOLUME = 0.05; // gentle, fixed ceiling — edit this single number to change loudness
+
+let audioCtx = null;
+let masterGain = null;
+let filter = null;
+let melodyFilter = null;
+let melodyGain = null;
+let isPlaying = false;
+let pluckTimers = [];
+let melodyTimer = null;
+
+// Pa (fifth below tonic), Sa, Sa (octave up), Sa (octave up again) —
+// classical tanpura tuning. Tonic C3 = 130.81 Hz.
+const STRINGS = [
+  { freq: 196.00, period: 2600, decay: 2.3 }, // Pa
+  { freq: 130.81, period: 2200, decay: 2.6 }, // Sa
+  { freq: 261.63, period: 2000, decay: 2.0 }, // Sa (octave)
+  { freq: 261.63, period: 2400, decay: 2.1 }  // Sa (octave, desynced)
+];
+
+// Raga Mohanam (the pentatonic scale most associated with auspicious
+// South Indian occasions): Sa Ri Ga Pa Dha, ascending then descending
+// back down, one octave starting at C4.
+const MELODY_NOTES = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 440.00, 392.00, 329.63, 293.66];
+const NOTE_GAP_MS = 560;   // time between successive notes in the phrase
+const PHRASE_REST_MS = 6500; // silence between repeats of the phrase
+
+
+function pluck(freq, decaySeconds) {
+  const osc = audioCtx.createOscillator();
+  osc.type = 'sawtooth'; // harmonically rich, then softened by the filter — closer to a plucked string than a pure tone
+  osc.frequency.value = freq;
+
+  const stringGain = audioCtx.createGain();
+  const now = audioCtx.currentTime;
+  stringGain.gain.setValueAtTime(0.0001, now);
+  stringGain.gain.exponentialRampToValueAtTime(1, now + 0.03);       // fast pluck attack
+  stringGain.gain.exponentialRampToValueAtTime(0.0001, now + decaySeconds); // slow natural decay
+
+  osc.connect(stringGain);
+  stringGain.connect(filter);
+  osc.start(now);
+  osc.stop(now + decaySeconds + 0.1);
+}
+
+function playReedNote(freq) {
+  const osc = audioCtx.createOscillator();
+  osc.type = 'sawtooth'; // harmonically rich, then narrowed by the bandpass filter into a reedy tone
+
+  // A gentle, continuous pitch wobble is what makes a sustained reed
+  // tone (like a nadaswaram) sound alive rather than synthetic.
+  const vibrato = audioCtx.createOscillator();
+  vibrato.frequency.value = 5;
+  const vibratoDepth = audioCtx.createGain();
+  vibratoDepth.gain.value = 4;
+  vibrato.connect(vibratoDepth);
+  vibratoDepth.connect(osc.frequency);
+
+  osc.frequency.value = freq;
+
+  const noteGain = audioCtx.createGain();
+  const now = audioCtx.currentTime;
+  noteGain.gain.setValueAtTime(0.0001, now);
+  noteGain.gain.exponentialRampToValueAtTime(1, now + 0.09);   // soft attack, like breath into a reed
+  noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.48); // fairly quick release between notes
+
+  osc.connect(noteGain);
+  noteGain.connect(melodyFilter);
+  osc.start(now);
+  vibrato.start(now);
+  osc.stop(now + 0.55);
+  vibrato.stop(now + 0.55);
+}
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = FIXED_VOLUME;
+  masterGain.connect(audioCtx.destination);
+
+  filter = audioCtx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 2200;
+  filter.connect(masterGain);
+}
+
+function startDrone() {
+  STRINGS.forEach(s => {
+    pluck(s.freq, s.decay); // pluck immediately
+    const timer = setInterval(() => pluck(s.freq, s.decay), s.period);
+    pluckTimers.push(timer);
+  });
+}
+
+function stopDrone() {
+  pluckTimers.forEach(clearInterval);
+  pluckTimers = [];
+}
+
+const musicToggle = document.getElementById('music-toggle');
+const musicIcon = document.getElementById('music-icon');
+
+const ICON_PLAY = '<path d="M8 5v14l11-7z"/>';
+const ICON_PAUSE = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+
+function updateMusicUI() {
+  musicIcon.innerHTML = isPlaying ? ICON_PAUSE : ICON_PLAY;
+  musicToggle.setAttribute('aria-pressed', String(isPlaying));
+  musicToggle.setAttribute('aria-label', isPlaying ? 'Pause background music' : 'Play background music');
+}
+
+musicToggle.addEventListener('click', async () => {
+  initAudio();
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+  isPlaying = !isPlaying;
+  if (isPlaying) {
+    startDrone();
+  } else {
+    stopDrone();
+  }
+  updateMusicUI();
+  prefs.set('musicPlaying', isPlaying);
+});
+
+
+/* =====================================================================
+   4) CONTENT-REVEAL ANIMATION ON SCROLL
+   -----------------------------------------------------------------
+   Sections fade/slide into place the first time they enter the
+   viewport. Skips entirely under prefers-reduced-motion (handled by
+   the CSS media query above collapsing the transition to ~0ms), and
+   here we also just show everything immediately in that case so nothing
+   depends on scrolling to become visible.
+   ===================================================================== */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (prefersReducedMotion) {
+  document.querySelectorAll('section').forEach(s => s.classList.add('is-visible'));
+} else {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('section').forEach(s => observer.observe(s));
+}
+
+
+/* =====================================================================
+   INIT: restore saved preferences on load
+   ===================================================================== */
+setLanguage(prefs.get('language', 'en'));
+updateMusicUI();
+</script>
+
+</body>
+</html>
