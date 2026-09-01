@@ -287,9 +287,6 @@
   body:not(.is-entered) .hero .names,
   body:not(.is-entered) .hero .motif-divider,
   body:not(.is-entered) .hero .hero-date,
-  body:not(.is-entered) .hero .scroll-hint {
-    animation-play-state: paused;
-  }
   body:not(.is-entered) { overflow: hidden; height: 100vh; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -345,16 +342,12 @@
   .hero .names,
   .hero .motif-divider,
   .hero .hero-date,
-  .hero .scroll-hint {
-    opacity: 0;
-    animation: heroFadeUp 0.9s ease-out forwards;
-  }
   .hero .bismillah      { animation-delay: 0.15s; }
   .hero .kicker         { animation-delay: 0.45s; }
   .hero .names          { animation-delay: 0.75s; }
   .hero .motif-divider  { animation-delay: 1.15s; }
   .hero .hero-date      { animation-delay: 1.4s; }
-  .hero .scroll-hint    { animation-delay: 1.65s; }
+  
 
   .corner { position: absolute; width: 74px; height: 74px; opacity: 0.85; }
   .corner.tl { top: 22px; left: 22px; }
@@ -443,20 +436,7 @@
   }
   .lang-ta .hero-date { font-family: 'Noto Sans Tamil', sans-serif; letter-spacing: 0.02em; }
 
-  .scroll-hint {
-    position: absolute;
-    bottom: 34px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    color: var(--gold-bright);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .scroll-hint > span:first-child { opacity: 0.6; }
+  
 
   /* The arrow inherits the .scroll-hint fade-in (see the shared rule
      above), then — once that's finished — starts a small, slow,
@@ -466,11 +446,7 @@
     from { transform: translateY(0); }
     to   { transform: translateY(5px); }
   }
-  .scroll-arrow {
-    font-size: 13px;
-    opacity: 0.55;
-    animation: arrowBob 1.6s ease-in-out 2.6s infinite alternate;
-  }
+ 
 
   /* ============ CONTENT REVEAL (scroll-triggered) ============
      Sections start slightly lower and transparent, then animate to
@@ -627,10 +603,7 @@
     <h1 class="names" data-i18n="names">Arshak<span class="amp">&amp;</span>Hajeera</h1>
     <div class="motif-divider"><div class="stem"></div></div>
     <div class="hero-date" data-i18n="heroDate">Sunday, October 18, 2026 · 11:30 AM</div>
-    <div class="scroll-hint">
-      <span data-i18n="scrollHint">scroll</span>
-      <span class="scroll-arrow" aria-hidden="true">⌄</span>
-    </div>
+    
   </section>
 
   <div class="wrap">
@@ -674,7 +647,7 @@ const translations = {
     kicker: "WITH JOY IN OUR HEARTS",
     names: 'Arshak<span class="amp">&amp;</span>Hajeera',
     heroDate: "Sunday, October 18, 2026 · 11:30 AM",
-    scrollHint: "scroll",
+   
     whenLabel: "when",
     whenLine1: "Sunday",
     whenMonth: "October",
@@ -695,7 +668,7 @@ const translations = {
     kicker: "எங்கள் இதயங்களில் மகிழ்ச்சியுடன்ு",
     names: 'அர்ஷக்<span class="amp">&amp;</span>ஹஜீரா',
     heroDate: "ஞாயிறு, அக்டோபர் 18, 2026 · காலை 11:30",
-    scrollHint: "கீழே செல்ல",
+   
     whenLabel: "எப்போது",
     whenLine1: "ஞாயிறு",
     whenMonth: "அக்டோபர்",
