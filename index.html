@@ -12,6 +12,25 @@
   falling back to tofu boxes or a mismatched system font.
 -->
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Marcellus&family=Jost:wght@300;400;500&family=Noto+Sans+Tamil:wght@400;500;600&display=swap" rel="stylesheet">
+<noscript><style>
+  .gate { display: none !important; }
+  body:not(.is-entered) { overflow: auto !important; height: auto !important; }
+  body:not(.is-entered) .hero,
+  body:not(.is-entered) .hero::before,
+  body:not(.is-entered) .corner path,
+  body:not(.is-entered) .corner circle,
+  body:not(.is-entered) .hero .bismillah,
+  body:not(.is-entered) .hero .kicker,
+  body:not(.is-entered) .hero .names,
+  body:not(.is-entered) .hero .motif-divider,
+  body:not(.is-entered) .hero .hero-date,
+  body:not(.is-entered) .hero .scroll-hint {
+    animation-play-state: running !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+</style></noscript>
 <style>
   :root {
     --maroon-deep: #4A0F16;
@@ -122,6 +141,161 @@
   .music-toggle:active { transform: scale(0.92); }
   .music-toggle:focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 2px; }
   .music-toggle svg { width: 15px; height: 15px; }
+
+  /* ============ ENTRANCE GATE: velvet curtains ============
+     A full-screen gate sits above everything else on load. Two
+     "curtain" panels meet in the middle; parting them on Enter is
+     the one big orchestrated motion for this page — the hero's own
+     fade-up sequence (below) is deliberately paused until the gate
+     opens, so the two reveals don't compete with each other. */
+  .gate {
+    position: fixed;
+    inset: 0;
+    z-index: 90; /* stays below .control-bar (100), so language/music are always reachable */
+    display: flex;
+    background: var(--maroon-deep);
+    overflow: hidden;
+  }
+  .gate[hidden] { display: none; }
+
+  .gate__curtain {
+    position: absolute;
+    top: -4%;
+    bottom: -4%;
+    width: 52%;
+    /* Alternating warm/dark maroon stripes at slightly uneven widths
+       read as loose velvet pleats rather than a mechanical repeat. */
+    background:
+      repeating-linear-gradient(90deg,
+        #5C141C 0px, #6B1B24 10px, #4A0F16 22px,
+        #6B1B24 34px, #591620 46px, #4A0F16 58px);
+    box-shadow: inset -50px 0 90px -40px rgba(0,0,0,0.65);
+    transition: transform 1.05s cubic-bezier(.65,0,.35,1);
+  }
+  .gate__curtain--left  { left: 0; box-shadow: inset -50px 0 90px -40px rgba(0,0,0,0.65); }
+  .gate__curtain--right { right: 0; transform: scaleX(-1); }
+  .gate.is-open .gate__curtain--left  { transform: translateX(-102%); }
+  .gate.is-open .gate__curtain--right { transform: scaleX(-1) translateX(-102%); }
+
+  .gate__stars { position: absolute; inset: 0; pointer-events: none; }
+  .gate__stars span {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--gold-bright);
+    opacity: 0.7;
+  }
+
+  .gate__panel {
+    position: relative;
+    z-index: 1;
+    margin: auto;
+    width: min(88vw, 420px);
+    text-align: center;
+    padding: 48px 30px;
+    color: var(--ivory);
+    transition: opacity 0.5s ease, transform 0.6s ease;
+  }
+  .gate.is-open .gate__panel {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+
+  .gate__kicker {
+    font-family: 'Marcellus', serif;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: lowercase;
+    color: rgba(251,243,228,0.65);
+    margin-bottom: 6px;
+  }
+  .gate__kicker--main { color: var(--gold-bright); margin-bottom: 22px; }
+  .lang-ta .gate__kicker { letter-spacing: 0.02em; text-transform: none; }
+
+  .gate__names {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: clamp(46px, 15vw, 68px);
+    line-height: 1.08;
+    color: var(--gold-bright);
+    text-shadow: 0 0 18px rgba(228,197,136,0.55), 0 0 44px rgba(228,197,136,0.25);
+  }
+  .lang-ta .gate__names { font-family: 'Noto Sans Tamil', sans-serif; font-weight: 600; font-size: clamp(32px, 10vw, 46px); }
+  .gate__names .amp { display: block; font-style: italic; font-size: 0.4em; color: var(--gold); margin: 6px 0; text-shadow: none; }
+
+  .gate__divider { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 30px 0 16px; }
+  .gate__divider .stem { width: 44px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+  .gate__divider .heart { color: var(--gold); font-size: 12px; }
+
+  .gate__save {
+    font-family: 'Marcellus', serif;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: rgba(251,243,228,0.75);
+    text-transform: lowercase;
+  }
+  .gate__date {
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--gold-bright);
+    margin-top: 4px;
+  }
+  .lang-ta .gate__save, .lang-ta .gate__date { letter-spacing: 0.02em; }
+
+  .gate__enter {
+    margin-top: 30px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--maroon-deep);
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    border: none;
+    border-radius: 999px;
+    padding: 15px 34px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 24px -8px rgba(0,0,0,0.5);
+    transition: transform var(--anim-fast) ease, box-shadow var(--anim-fast) ease;
+  }
+  .gate__enter:hover { transform: translateY(-1px); box-shadow: 0 14px 28px -8px rgba(0,0,0,0.55); }
+  .gate__enter:active { transform: translateY(0); }
+  .gate__enter:focus-visible { outline: 2px solid var(--ivory); outline-offset: 3px; }
+  .lang-ta .gate__enter { letter-spacing: 0.02em; }
+
+  .gate__tagline {
+    margin-top: 22px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(251,243,228,0.7);
+  }
+
+  /* Pause the hero's own entrance sequence until the gate opens, so
+     it plays once — right after the curtains part — instead of
+     racing to finish underneath them. */
+  body:not(.is-entered) .hero,
+  body:not(.is-entered) .hero::before,
+  body:not(.is-entered) .corner path,
+  body:not(.is-entered) .corner circle,
+  body:not(.is-entered) .hero .bismillah,
+  body:not(.is-entered) .hero .kicker,
+  body:not(.is-entered) .hero .names,
+  body:not(.is-entered) .hero .motif-divider,
+  body:not(.is-entered) .hero .hero-date,
+  body:not(.is-entered) .hero .scroll-hint {
+    animation-play-state: paused;
+  }
+  body:not(.is-entered) { overflow: hidden; height: 100vh; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gate.is-open .gate__curtain--left  { transform: translateX(-102%); }
+    .gate.is-open .gate__curtain--right { transform: scaleX(-1) translateX(-102%); }
+  }
 
   /* ============ HERO ============ */
   .hero {
@@ -400,6 +574,33 @@
 </head>
 <body>
 
+  <!-- ============ ENTRANCE GATE ============ -->
+  <div class="gate" id="gate" role="dialog" aria-modal="true" aria-label="Wedding invitation">
+    <div class="gate__curtain gate__curtain--left"></div>
+    <div class="gate__curtain gate__curtain--right"></div>
+    <div class="gate__stars" aria-hidden="true">
+      <span style="left:12%; top:18%;"></span>
+      <span style="left:22%; top:34%;"></span>
+      <span style="left:15%; top:62%;"></span>
+      <span style="right:14%; top:20%;"></span>
+      <span style="right:24%; top:38%;"></span>
+      <span style="right:16%; top:60%;"></span>
+    </div>
+    <div class="gate__panel">
+      <div class="gate__kicker" data-i18n="kicker">together with their families</div>
+      <div class="gate__kicker gate__kicker--main" data-i18n="gateInvite">we invite you to celebrate the wedding of</div>
+      <h2 class="gate__names" data-i18n="names">Arshak<span class="amp">&amp;</span>Hajeera</h2>
+      <div class="gate__divider"><div class="stem"></div><span class="heart" aria-hidden="true">♥</span><div class="stem"></div></div>
+      <div class="gate__save" data-i18n="gateSave">save the date</div>
+      <div class="gate__date" data-i18n="gateDate">18 October 2026</div>
+      <button type="button" class="gate__enter" id="enter-btn">
+        <span data-i18n="gateEnter">Enter Invitation</span>
+        <span aria-hidden="true">♥</span>
+      </button>
+      <p class="gate__tagline" data-i18n="gateTagline">Two hearts, one beautiful journey.<br>A lifetime of love begins&hellip;</p>
+    </div>
+  </div>
+
   <!-- ============ CONTROL BAR: language + music ============ -->
   <div class="control-bar">
     <div class="lang-toggle" role="group" aria-label="Language">
@@ -413,6 +614,8 @@
     </div>
   </div>
 
+  <div id="site-content">
+
   <section class="hero">
     <svg class="corner tl" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
     <svg class="corner tr" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
@@ -420,7 +623,7 @@
     <svg class="corner br" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path pathLength="1" d="M2 2 L2 40 Q2 60 22 60" stroke="#C9A15E" stroke-width="1.2"/><path pathLength="1" d="M2 2 L40 2 Q60 2 60 22" stroke="#C9A15E" stroke-width="1.2"/><circle cx="22" cy="60" r="3" fill="#C9A15E"/><circle cx="60" cy="22" r="3" fill="#C9A15E"/></svg>
 
     <div class="bismillah">بسم الله الرحمن الرحيم</div>
-    <div class="kicker" data-i18n="kicker">together with their families</div>
+    <div class="kicker" data-i18n="kicker">WITH JOY IN OUR HERATS</div>
     <h1 class="names" data-i18n="names">Arshak<span class="amp">&amp;</span>Hajeera</h1>
     <div class="motif-divider"><div class="stem"></div></div>
     <div class="hero-date" data-i18n="heroDate">Sunday, October 18, 2026 · 11:30 AM</div>
@@ -450,7 +653,7 @@
         <span data-i18n="venueAddress">Old No. 41, New No. 48, C.P. Kovil Street, Royapettah,<br>Chennai – 600 014</span>
         <div class="venue-note" data-i18n="venueNote">(Opp. Amir Mahal, near Express Avenue)</div>
       </div>
-      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=MS+Mahal+CP+Kovil+Street+Royapettah+Chennai" target="_blank" rel="noopener" data-i18n="mapLink">Get Directions</a>
+      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=MS+Mahal+CP+Kovil+Street+Royapettah+Chennai" target="_blank" rel="noopener" data-i18n="mapLink">View on map</a>
     </section>
   </div>
 
@@ -458,13 +661,17 @@
     <div class="footer-names">Arshak &amp; Hajeera</div>
   </footer>
 
+  </div><!-- /#site-content -->
+
 <script>
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 /* =====================================================================
    1) LANGUAGE TOGGLE (EN / TA)
    ===================================================================== */
 const translations = {
   en: {
-    kicker: "together with their families",
+    kicker: "WITH JOY IN OUR HEARTS",
     names: 'Arshak<span class="amp">&amp;</span>Hajeera',
     heroDate: "Sunday, October 18, 2026 · 11:30 AM",
     scrollHint: "scroll",
@@ -477,7 +684,12 @@ const translations = {
     venueName: "MS Mahal",
     venueAddress: "Old No. 41, New No. 48, C.P. Kovil Street, Royapettah,<br>Chennai – 600 014",
     venueNote: "(Opp. Amir Mahal, near Express Avenue)",
-    mapLink: "Get Directions"
+    mapLink: "View on map",
+    gateInvite: "we invite you to celebrate the wedding of",
+    gateSave: "save the date",
+    gateDate: "18 October 2026",
+    gateEnter: "Enter Invitation",
+    gateTagline: "Two hearts, one beautiful journey.<br>A lifetime of love begins&hellip;"
   },
   ta: {
     kicker: "தங்கள் குடும்பத்தினருடன் இணைந்து",
@@ -493,7 +705,12 @@ const translations = {
     venueName: "எம்.எஸ். மஹால்",
     venueAddress: "பழைய எண். 41, புதிய எண். 48, சி.பி. கோவில் தெரு, ராயப்பேட்டை,<br>சென்னை – 600 014",
     venueNote: "(அமீர் மஹாலுக்கு எதிரே, எக்ஸ்பிரஸ் அவென்யூ அருகில்)",
-    mapLink: "வரைபடத்தில் காண்க"
+    mapLink: "வரைபடத்தில் காண்க",
+    gateInvite: "இவர்களின் திருமணத்தை கொண்டாட உங்களை அன்புடன் அழைக்கிறோம்",
+    gateSave: "இந்நாளை நினைவில் வையுங்கள்",
+    gateDate: "18 அக்டோபர் 2026",
+    gateEnter: "அழைப்பிதழைத் திற",
+    gateTagline: "இரு இதயங்கள், ஒரு அழகிய பயணம்.<br>ஒரு வாழ்நாள் காதல் தொடங்குகிறது&hellip;"
   }
 };
 
@@ -735,7 +952,60 @@ musicToggle.addEventListener('click', async () => {
 
 
 /* =====================================================================
-   4) CONTENT-REVEAL ANIMATION ON SCROLL
+   4) ENTRANCE GATE — parts the curtains, reveals the invitation
+   -----------------------------------------------------------------
+   One click/Enter does three things in order: starts the background
+   music (this is also the first user gesture the page gets, which
+   browsers require before audio can play), slides the curtains
+   apart, and — once they're clear — unpauses the hero's own entrance
+   sequence and hands focus to it.
+   ===================================================================== */
+const gate = document.getElementById('gate');
+const enterBtn = document.getElementById('enter-btn');
+const siteContent = document.getElementById('site-content');
+
+siteContent.inert = true; // not just visually hidden — untabbable and unreadable by assistive tech until Enter is pressed
+siteContent.setAttribute('aria-hidden', 'true'); // set here (not in the HTML) so a no-JS visitor's screen reader isn't permanently locked out
+
+async function openGate() {
+  if (gate.classList.contains('is-open')) return; // guards against a double-fire if Enter is pressed twice quickly
+
+  // Start the music on this same gesture, exactly as if the music
+  // button itself had been clicked, so the site doesn't need a
+  // second click just to unlock audio.
+  initAudio();
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+  if (!isPlaying) {
+    isPlaying = true;
+    startDrone();
+    startMelody();
+    updateMusicUI();
+    prefs.set('musicPlaying', true);
+  }
+
+  gate.classList.add('is-open');
+
+  const curtainDuration = prefersReducedMotion ? 0 : 1050;
+  window.setTimeout(() => {
+    gate.hidden = true;
+    document.body.classList.add('is-entered'); // unpauses the hero's fade-up sequence (see CSS)
+    siteContent.removeAttribute('aria-hidden');
+    siteContent.inert = false;
+    document.querySelector('.hero .names').setAttribute('tabindex', '-1');
+    document.querySelector('.hero .names').focus();
+  }, curtainDuration);
+}
+
+enterBtn.addEventListener('click', openGate);
+
+// The gate behaves like a modal on open: focus starts on its one
+// interactive control so keyboard users land there immediately
+// rather than tabbing past the (inert) page behind it.
+window.setTimeout(() => enterBtn.focus(), 50);
+
+
+/* =====================================================================
+   5) CONTENT-REVEAL ANIMATION ON SCROLL
    -----------------------------------------------------------------
    Sections fade/slide into place the first time they enter the
    viewport. Skips entirely under prefers-reduced-motion (handled by
@@ -743,8 +1013,6 @@ musicToggle.addEventListener('click', async () => {
    here we also just show everything immediately in that case so nothing
    depends on scrolling to become visible.
    ===================================================================== */
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
 if (prefersReducedMotion) {
   document.querySelectorAll('section').forEach(s => s.classList.add('is-visible'));
 } else {
