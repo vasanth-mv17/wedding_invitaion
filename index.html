@@ -1171,6 +1171,115 @@ enterBtn.addEventListener('click', openGate);
 // rather than tabbing past the (inert) page behind it.
 window.setTimeout(() => enterBtn.focus(), 50);
 
+  /* =====================================================================
+   5) WEDDING COUNTDOWN + LIGHTWEIGHT VISUALS
+   -----------------------------------------------------------------
+   CONFIGURE ONLY THIS VALUE if the ceremony date/time changes.
+   The +05:30 offset keeps the countdown anchored to India time.
+   ===================================================================== */
+const TARGET_DATE = '2026-10-18T11:30:00+05:30';
+
+const countdownDays = document.getElementById('timer-days');
+const countdownHours = document.getElementById('timer-hours');
+const countdownMinutes = document.getElementById('timer-minutes');
+const countdownSeconds = document.getElementById('timer-seconds');
+const countdownStatus = document.getElementById('countdown-status');
+const countdownSection = document.getElementById('countdown');
+const countdownParticles = document.getElementById('countdown-particles');
+
+let countdownTimerId = null;
+let countdownFinished = false;
+
+const targetTime = Date.parse(TARGET_DATE);
+const targetDateIsValid = Number.isFinite(targetTime);
+
+function padTime(value) {
+  return String(Math.max(0, value)).padStart(2, '0');
+}
+
+function updateCountdown() {
+  if (!targetDateIsValid) {
+    countdownDays.textContent = '00';
+    countdownHours.textContent = '00';
+    countdownMinutes.textContent = '00';
+    countdownSeconds.textContent = '00';
+    countdownStatus.textContent = 'Please update the countdown target date.';
+    return;
+  }
+
+  const remaining = targetTime - Date.now();
+
+  if (remaining <= 0) {
+    countdownDays.textContent = '00';
+    countdownHours.textContent = '00';
+    countdownMinutes.textContent = '00';
+    countdownSeconds.textContent = '00';
+
+    if (!countdownFinished) {
+      countdownFinished = true;
+      countdownStatus.setAttribute('data-i18n', 'countdownPast');
+      const lang = document.documentElement.lang === 'ta' ? 'ta' : 'en';
+      countdownStatus.textContent = translations[lang].countdownPast;
+    }
+
+    if (countdownTimerId) {
+      clearInterval(countdownTimerId);
+      countdownTimerId = null;
+    }
+    return;
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  countdownDays.textContent = String(days).padStart(2, '0');
+  countdownHours.textContent = padTime(hours);
+  countdownMinutes.textContent = padTime(minutes);
+  countdownSeconds.textContent = padTime(seconds);
+
+  const lang = document.documentElement.lang === 'ta' ? 'ta' : 'en';
+  countdownStatus.setAttribute('data-i18n', 'countdownLive');
+  countdownStatus.textContent = translations[lang].countdownLive;
+}
+
+if (countdownSection) {
+  updateCountdown();
+  countdownTimerId = window.setInterval(updateCountdown, 1000);
+
+  // Keep the effect small: 22 particles instead of a continuously rendered canvas.
+  if (!prefersReducedMotion && countdownParticles) {
+    for (let i = 0; i < 22; i++) {
+      const particle = document.createElement('span');
+      particle.className = 'countdown__particle';
+      particle.style.left = (Math.random() * 100) + '%';
+      particle.style.top = (30 + Math.random() * 70) + '%';
+      particle.style.setProperty('--particle-drift', (Math.random() * 100 - 50).toFixed(0) + 'px');
+      particle.style.setProperty('--particle-duration', (4.5 + Math.random() * 4).toFixed(2) + 's');
+      particle.style.setProperty('--particle-delay', (-Math.random() * 8).toFixed(2) + 's');
+      countdownParticles.appendChild(particle);
+    }
+
+    // Event-driven parallax — no continuous animation loop.
+    countdownSection.addEventListener('pointermove', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      const rect = countdownSection.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) - 0.5;
+      const y = ((event.clientY - rect.top) / rect.height) - 0.5;
+      const px = (x * 7).toFixed(2) + 'px';
+      const py = (y * 5).toFixed(2) + 'px';
+      countdownSection.style.setProperty('--parallax-x', px);
+      countdownSection.style.setProperty('--parallax-y', py);
+    });
+
+    countdownSection.addEventListener('pointerleave', () => {
+      countdownSection.style.setProperty('--parallax-x', '0px');
+      countdownSection.style.setProperty('--parallax-y', '0px');
+    });
+  }
+}
 
 /* =====================================================================
    5) CONTENT-REVEAL ANIMATION ON SCROLL
