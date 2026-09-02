@@ -164,8 +164,15 @@ body{
 .names{
   margin-top:25px;
   font:500 clamp(65px,11vw,120px)/.83 'Cormorant Garamond',serif;
-  color:var(--gold-light);
-  text-shadow:0 0 30px rgba(236,208,138,.12);
+  color:#f5d993;
+  text-shadow:
+    0 0 5px rgba(255,247,215,.95),
+    0 0 12px rgba(255,231,157,.92),
+    0 0 28px rgba(255,207,104,.78),
+    0 0 52px rgba(244,171,48,.55),
+    0 0 85px rgba(202,111,25,.34);
+  filter:brightness(1.06);
+  animation:radiantNameGlow 3.2s ease-in-out infinite alternate;
 }
 
 .amp{
@@ -476,7 +483,7 @@ footer small{opacity:.5;letter-spacing:.12em}
 .language-switcher button:focus-visible{outline:2px solid var(--gold-light);outline-offset:2px}
 [lang="ta"], .lang-ta{font-family:'Noto Sans Tamil','Jost',sans-serif}
 @media(max-width:650px){
-  .language-switcher{top:35px}
+  .language-switcher{top:10px}
   .language-switcher button{padding:7px 12px;min-width:62px}
 }
 @media(prefers-reduced-motion:reduce){.language-switcher{backdrop-filter:none}}
@@ -542,44 +549,87 @@ footer small{opacity:.5;letter-spacing:.12em}
 
 /* ===== Curtain opener overlay: existing invitation remains untouched ===== */
 #curtain-opener{position:fixed;inset:0;width:100%;height:100dvh;z-index:999999;overflow:hidden;background:#26040a;display:flex;align-items:center;justify-content:center;isolation:isolate}
-#curtain-opener .curtain-panel{position:absolute;top:0;bottom:0;width:51%;z-index:3;background:repeating-linear-gradient(88deg,rgba(255,255,255,.035) 0 12px,rgba(80,0,22,.13) 13px 30px,rgba(255,255,255,.018) 31px 43px,rgba(50,0,14,.15) 44px 62px),linear-gradient(90deg,#7e0d2d,#a91445 42%,#69091f);box-shadow:inset 0 0 55px rgba(20,0,8,.55);transition:transform 1.45s cubic-bezier(.76,0,.18,1)}
-#curtain-opener .curtain-panel.left{left:0;border-right:2px solid rgba(220,176,83,.55)}
-#curtain-opener .curtain-panel.right{right:0;border-left:2px solid rgba(220,176,83,.55)}
-#curtain-opener .curtain-panel:after{content:"";position:absolute;top:0;bottom:0;width:100px;background:linear-gradient(90deg,rgba(255,255,255,.08),transparent 55%,rgba(0,0,0,.16));opacity:.55}
+#curtain-opener .curtain-panel{position:absolute;top:0;bottom:0;width:51%;z-index:3;background:
+  radial-gradient(ellipse at 50% 48%,rgba(145,32,45,.18),transparent 48%),
+  repeating-linear-gradient(90deg,
+    #42070f 0 18px,
+    #5b0d18 19px 31px,
+    #741322 32px 43px,
+    #5a0c17 44px 57px,
+    #3d060e 58px 72px),
+  linear-gradient(90deg,#3d060e,#68101c 42%,#4a0912);
+  box-shadow:
+    inset 0 0 65px rgba(18,0,5,.72),
+    inset 0 0 10px rgba(255,190,105,.045);
+  transition:transform 1.45s cubic-bezier(.76,0,.18,1)}
+#curtain-opener .curtain-panel.left{left:0;border-right:0}
+#curtain-opener .curtain-panel.right{right:0;border-left:0}
+#curtain-opener .curtain-panel:before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  repeating-linear-gradient(90deg,transparent 0 16px,rgba(255,178,105,.045) 17px 22px,transparent 23px 38px);
+  mix-blend-mode:screen;opacity:.75}
+#curtain-opener .curtain-panel:after{content:"";position:absolute;top:0;bottom:0;width:125px;background:linear-gradient(90deg,rgba(255,210,145,.08),transparent 52%,rgba(0,0,0,.25));opacity:.62}
 #curtain-opener .curtain-panel.left:after{right:0}
 #curtain-opener .curtain-panel.right:after{left:0;transform:scaleX(-1)}
-#curtain-opener .opener-center{position:relative;z-index:5;width:min(560px,82vw);padding:42px 26px 48px;text-align:center;color:var(--gold-light);background:radial-gradient(circle at 50% 38%,rgba(170,72,45,.2),transparent 35%),linear-gradient(180deg,rgba(48,5,13,.96),rgba(35,3,9,.98));border:1px solid rgba(200,156,80,.62);box-shadow:0 0 0 8px rgba(200,156,80,.045),0 25px 70px rgba(0,0,0,.45);transition:opacity .65s ease,transform .9s cubic-bezier(.76,0,.18,1),filter .65s ease}
-#curtain-opener .opener-center:before{content:"";position:absolute;inset:12px;border:1px solid rgba(200,156,80,.2);pointer-events:none}
+#curtain-opener .opener-center{position:relative;z-index:5;width:min(560px,82vw);padding:42px 26px 48px;text-align:center;color:var(--gold-light);background:transparent;border:0;box-shadow:none;transition:opacity .65s ease,transform .9s cubic-bezier(.76,0,.18,1),filter .65s ease}
+#curtain-opener .opener-center:before{display:none}
 #curtain-opener .opener-arabic{position:relative;margin-bottom:18px;font-size:clamp(23px,4vw,34px);color:var(--gold-light)}
 #curtain-opener .opener-kicker{position:relative;font-family:'Marcellus',serif;font-size:10px;line-height:2;letter-spacing:.28em;color:rgba(247,234,211,.82);text-transform:uppercase}
-#curtain-opener .opener-names{position:relative;margin:24px 0 20px;font:500 clamp(58px,10vw,92px)/.78 'Cormorant Garamond',serif;color:var(--gold-light);text-shadow:0 0 28px rgba(236,208,138,.13)}
+#curtain-opener .opener-names{position:relative;margin:24px 0 20px;font:500 clamp(58px,10vw,92px)/.78 'Cormorant Garamond',serif;color:#f5d993;
+  text-shadow:
+    0 0 2px rgba(255,247,215,.75),
+    0 0 6px rgba(255,231,157,.60),
+    0 0 12px rgba(255,207,104,.42),
+    0 0 22px rgba(244,171,48,.24);
+  filter:brightness(1.03);
+  animation:radiantNameGlow 2.8s ease-in-out infinite alternate}
 #curtain-opener .opener-amp{margin:12px 0;font-size:34px;color:var(--gold)}
 #curtain-opener .opener-date{position:relative;margin-top:20px;font-family:'Marcellus',serif;font-size:12px;letter-spacing:.18em;color:rgba(247,234,211,.88)}
-#curtain-opener .enter-invitation{position:relative;min-width:min(300px,72vw);min-height:56px;margin-top:32px;padding:13px 28px;border:1px solid #f4d58e;border-radius:999px;background:linear-gradient(180deg,#efd08a,#d8ae61);color:#3b0710;cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:.12em;box-shadow:0 0 0 5px rgba(236,208,138,.07),0 10px 28px rgba(0,0,0,.3);transition:transform .25s ease,filter .25s ease}
+#curtain-opener .enter-invitation{position:relative;min-width:min(300px,72vw);min-height:56px;margin-top:32px;padding:13px 28px;border:1px solid #f4d58e;border-radius:999px;background:linear-gradient(180deg,#efd08a,#d8ae61);color:#3b0710;cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:.12em;box-shadow:0 0 0 3px rgba(236,208,138,.045),0 8px 20px rgba(0,0,0,.26);transition:transform .25s ease,filter .25s ease}
 #curtain-opener .enter-invitation:hover{transform:translateY(-2px) scale(1.015);filter:brightness(1.06)}
 #curtain-opener .enter-invitation:focus-visible{outline:2px solid #fff0c2;outline-offset:4px}
 #curtain-opener .opener-note{position:relative;margin-top:22px;font:italic 17px/1.45 'Cormorant Garamond',serif;color:rgba(247,234,211,.78)}
-#curtain-opener .opener-star{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold-light);box-shadow:0 0 12px rgba(236,208,138,.75);animation:openerTwinkle 2.8s ease-in-out infinite}
+#curtain-opener .opener-star{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold-light);box-shadow:0 0 7px rgba(236,208,138,.42);animation:openerTwinkle 2.8s ease-in-out infinite}
 #curtain-opener .s1{top:18%;left:18%}.s2{top:24%;right:22%;animation-delay:.8s}.s3{top:62%;left:27%;animation-delay:1.3s}.s4{top:72%;right:17%;animation-delay:.4s}.s5{top:38%;left:76%;animation-delay:1.8s}
+@keyframes radiantNameGlow{
+  0%{
+    filter:brightness(1.01);
+    text-shadow:
+      0 0 2px rgba(255,247,215,.68),
+      0 0 6px rgba(255,231,157,.52),
+      0 0 12px rgba(255,207,104,.36),
+      0 0 22px rgba(244,171,48,.20);
+  }
+  100%{
+    filter:brightness(1.07);
+    text-shadow:
+      0 0 3px rgba(255,252,230,.78),
+      0 0 8px rgba(255,239,181,.62),
+      0 0 16px rgba(255,213,112,.44),
+      0 0 28px rgba(244,171,48,.26);
+  }
+}
+
 @keyframes openerTwinkle{0%,100%{opacity:.18;transform:scale(.7)}50%{opacity:.9;transform:scale(1.35)}}
 #curtain-opener.is-opening .curtain-panel.left{transform:translateX(-101%)}
 #curtain-opener.is-opening .curtain-panel.right{transform:translateX(101%)}
 #curtain-opener.is-opening .opener-center{opacity:0;transform:scale(.96);filter:blur(4px);pointer-events:none}
 #curtain-opener.is-opening{pointer-events:none}
 @media(max-width:650px){#curtain-opener .opener-center{width:min(88vw,500px);padding:34px 18px 40px}#curtain-opener .opener-kicker{letter-spacing:.18em;font-size:9px}#curtain-opener .enter-invitation{min-height:54px;font-size:12px}}
-@media(prefers-reduced-motion:reduce){#curtain-opener .curtain-panel,#curtain-opener .opener-center{transition-duration:.25s}#curtain-opener .opener-star{animation:none;opacity:.45}}
+@media(prefers-reduced-motion:reduce){#curtain-opener .curtain-panel,#curtain-opener .opener-center{transition-duration:.25s}#curtain-opener .opener-star{animation:none;opacity:.45}.names,#curtain-opener .opener-names{animation:none}}
 
 
 /* Controls placed inside the curtain gate */
 #curtain-opener .curtain-gate-controls{
-  position:relative;
-  z-index:8;
+  position:absolute;
+  top:24px;
+  right:24px;
+  z-index:20;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-end;
   flex-wrap:wrap;
   gap:10px;
-  margin:0 auto 28px;
+  margin:0;
 }
 
 #curtain-opener .gate-language{
@@ -628,6 +678,12 @@ footer small{opacity:.5;letter-spacing:.12em}
   transform:translateY(-1px);
 }
 
+#curtain-opener .gate-music.is-playing{
+  border-color:var(--gold-light);
+  background:rgba(200,156,80,.16);
+  box-shadow:0 0 18px rgba(236,208,138,.16);
+}
+
 #curtain-opener .gate-option:focus-visible,
 #curtain-opener .gate-music:focus-visible{
   outline:2px solid var(--gold-light);
@@ -641,8 +697,9 @@ footer small{opacity:.5;letter-spacing:.12em}
 
 @media(max-width:650px){
   #curtain-opener .curtain-gate-controls{
+    top:10px;
+    right:10px;
     gap:7px;
-    margin-bottom:20px;
   }
   #curtain-opener .gate-option{
     min-width:70px;
@@ -776,21 +833,22 @@ body:has(#curtain-opener) > .language-switcher {
   <span class="opener-star s3" aria-hidden="true"></span>
   <span class="opener-star s4" aria-hidden="true"></span>
   <span class="opener-star s5" aria-hidden="true"></span>
+  <div class="curtain-gate-controls" aria-label="Invitation options">
+    <div class="gate-language" role="group" aria-label="Language">
+      <button type="button" id="gateEnglish" class="gate-option active" aria-pressed="true">English</button>
+      <button type="button" id="gateTamil" class="gate-option" aria-pressed="false">தமிழ்</button>
+    </div>
+    <button type="button" id="gateMusic" class="gate-music"
+            aria-pressed="false"
+            aria-label="Play Remo music"
+            title="Play music">
+      <span class="gate-music-icon" aria-hidden="true">♫</span>
+      <span class="gate-music-label">Music</span>
+    </button>
+  </div>
+
   <div class="opener-center">
 
-    <div class="curtain-gate-controls" aria-label="Invitation options">
-      <div class="gate-language" role="group" aria-label="Language">
-        <button type="button" id="gateEnglish" class="gate-option active" aria-pressed="true">English</button>
-        <button type="button" id="gateTamil" class="gate-option" aria-pressed="false">தமிழ்</button>
-      </div>
-      <button type="button" id="gateMusic" class="gate-music"
-              aria-pressed="false"
-              aria-label="Play wedding music"
-              title="Play or pause music">
-        <span class="gate-music-icon" aria-hidden="true">♫</span>
-        <span id="gateMusicLabel">Music</span>
-      </button>
-    </div>
     <div class="opener-arabic" aria-hidden="true">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
     <div class="opener-kicker">Together with their families<br>We invite you to celebrate the wedding of</div>
     <div class="opener-names">Arshak<div class="opener-amp">&amp;</div>Hajeera</div>
@@ -1137,106 +1195,52 @@ if (directionsBtn) {
 /* Remo — First Sight Background Score */
 const musicToggle = document.getElementById('musicToggle');
 const musicLabel = document.getElementById('musicLabel');
-const gateMusic = document.getElementById('gateMusic');
-const gateMusicLabel = document.getElementById('gateMusicLabel');
 
-// One reusable audio element for the whole invitation.
 const weddingMusic = new Audio('remo-first-sight-background-score.mp3');
 weddingMusic.loop = true;
 weddingMusic.preload = 'auto';
 weddingMusic.volume = 0.18;
 
-// Persist only the fact that the curtain music has been started during this session.
-let hasCurtainMusicPlayed = sessionStorage.getItem('hasCurtainMusicPlayed') === 'true';
+function updateMusicButton(isPlaying) {
+  if (!musicToggle) return;
+  musicToggle.classList.toggle('is-playing', isPlaying);
+  musicToggle.setAttribute('aria-pressed', String(isPlaying));
+  musicToggle.setAttribute(
+    'aria-label',
+    isPlaying ? 'Pause Remo music' : 'Play Remo music'
+  );
+  musicToggle.title = isPlaying ? 'Pause music' : 'Play music';
 
-function updateMusicButtons(isPlaying) {
-  // Main invitation music control.
-  if (musicToggle) {
-    musicToggle.classList.toggle('is-playing', isPlaying);
-    musicToggle.setAttribute('aria-pressed', String(isPlaying));
-    musicToggle.setAttribute(
-      'aria-label',
-      isPlaying ? 'Pause Remo music' : 'Play Remo music'
-    );
-    musicToggle.title = isPlaying ? 'Pause music' : 'Play music';
-    if (musicLabel) musicLabel.textContent = isPlaying ? 'Pause' : 'Music';
+  if (musicLabel) musicLabel.textContent = isPlaying ? 'Pause' : 'Music';
 
-    const icon = musicToggle.querySelector('.music-icon');
-    if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
-  }
-
-  // Curtain music control. Keep its state synchronized with the same audio.
-  if (gateMusic) {
-    gateMusic.classList.toggle('is-playing', isPlaying);
-    gateMusic.setAttribute('aria-pressed', String(isPlaying));
-    gateMusic.setAttribute(
-      'aria-label',
-      isPlaying ? 'Pause wedding music' : 'Play wedding music'
-    );
-    gateMusic.title = isPlaying ? 'Pause music' : 'Play music';
-    if (gateMusicLabel) gateMusicLabel.textContent = isPlaying ? 'Pause' : 'Music';
-
-    const icon = gateMusic.querySelector('.gate-music-icon');
-    if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
-  }
+  const icon = musicToggle.querySelector('.music-icon');
+  if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
 }
 
-async function playWeddingMusic() {
-  try {
-    // Calling play() on an already-playing audio element does not reset its position.
-    if (weddingMusic.paused) {
-      await weddingMusic.play();
-    }
-    updateMusicButtons(true);
-    return true;
-  } catch (error) {
-    console.warn(
-      'Could not play remo-first-sight-background-score.mp3. ' +
-      'Place the MP3 in the same folder as the HTML file.',
-      error
-    );
-    updateMusicButtons(false);
-    return false;
-  }
-}
-
-function pauseWeddingMusic() {
-  weddingMusic.pause();
-  updateMusicButtons(false);
-}
-
-// Curtain music control: toggle play/pause without creating a second Audio object.
-if (gateMusic) {
-  gateMusic.addEventListener('click', async () => {
-    if (weddingMusic.paused) {
-      const started = await playWeddingMusic();
-      if (started) {
-        hasCurtainMusicPlayed = true;
-        sessionStorage.setItem('hasCurtainMusicPlayed', 'true');
-      }
-    } else {
-      pauseWeddingMusic();
-    }
-  });
-}
-
-// Main invitation music control uses the same audio element.
 if (musicToggle) {
   musicToggle.addEventListener('click', async () => {
     if (weddingMusic.paused) {
-      await playWeddingMusic();
+      try {
+        await weddingMusic.play();
+        updateMusicButton(true);
+      } catch (error) {
+        console.warn(
+          'Could not play remo-first-sight-background-score.mp3. ' +
+          'Place the MP3 in the same folder as index.html.',
+          error
+        );
+        if (musicLabel) musicLabel.textContent = 'Add MP3';
+      }
     } else {
-      pauseWeddingMusic();
+      weddingMusic.pause();
+      updateMusicButton(false);
     }
   });
+
+  weddingMusic.addEventListener('play', () => updateMusicButton(true));
+  weddingMusic.addEventListener('pause', () => updateMusicButton(false));
 }
 
-weddingMusic.addEventListener('play', () => updateMusicButtons(true));
-weddingMusic.addEventListener('pause', () => updateMusicButtons(false));
-weddingMusic.addEventListener('ended', () => updateMusicButtons(false));
-
-// Initialize both controls from the current audio state.
-updateMusicButtons(!weddingMusic.paused);
 </script>
 
 
@@ -1248,6 +1252,7 @@ updateMusicButtons(!weddingMusic.paused);
   const enter = document.getElementById('enter-invitation');
   const gateEnglish = document.getElementById('gateEnglish');
   const gateTamil = document.getElementById('gateTamil');
+  const gateMusic = document.getElementById('gateMusic');
 
   if (!opener || !enter) return;
 
@@ -1296,14 +1301,90 @@ updateMusicButtons(!weddingMusic.paused);
     setGateLanguage('ta');
   });
 
-  // Curtain music control is implemented by the shared audio logic above.
-  // Enter Invitation must never pause, reset, or replace the audio element.
-  async function ensureWeddingMusicPlaying() {
-    if (typeof playWeddingMusic === 'function') {
-      return playWeddingMusic();
-    }
-    return false;
+  // Session-only state: remembers whether the curtain music control
+  // has ever been used during this page session.
+  const hasCurtainMusicPlayed = sessionStorage.getItem('hasCurtainMusicPlayed') === 'true';
+
+  function updateGateMusicButton(isPlaying) {
+    if (!gateMusic) return;
+
+    gateMusic.classList.toggle('is-playing', isPlaying);
+    gateMusic.setAttribute('aria-pressed', String(isPlaying));
+    gateMusic.setAttribute('aria-label', isPlaying ? 'Pause Remo music' : 'Play Remo music');
+    gateMusic.title = isPlaying ? 'Pause music' : 'Play music';
+
+    const icon = gateMusic.querySelector('.gate-music-icon');
+    const label = gateMusic.querySelector('.gate-music-label');
+    if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
+    if (label) label.textContent = isPlaying ? 'Pause' : 'Music';
   }
+
+  // Keep the curtain control synchronized with the single shared Audio object.
+  if (typeof weddingMusic !== 'undefined' && weddingMusic) {
+    weddingMusic.addEventListener('play', function(){
+      updateGateMusicButton(true);
+    });
+    weddingMusic.addEventListener('pause', function(){
+      updateGateMusicButton(false);
+    });
+  }
+
+  // Curtain Music control: play/pause the SAME audio object used by the page.
+  if (gateMusic) {
+    gateMusic.addEventListener('click', async function(){
+      if (typeof weddingMusic === 'undefined' || !weddingMusic) return;
+
+      if (weddingMusic.paused) {
+        try {
+          await weddingMusic.play();
+          sessionStorage.setItem('hasCurtainMusicPlayed', 'true');
+          updateGateMusicButton(true);
+        } catch (error) {
+          console.warn(
+            'Could not play remo-first-sight-background-score.mp3. ' +
+            'Place the MP3 in the same folder as index.html.',
+            error
+          );
+          updateGateMusicButton(false);
+        }
+      } else {
+        weddingMusic.pause();
+        updateGateMusicButton(false);
+      }
+    });
+  }
+
+  // Enter Invitation never resets or recreates the audio.
+  // If music is already playing, leave it alone. If it is paused/not started,
+  // start the same shared Audio object from its current position.
+  function startWeddingMusic() {
+    if (typeof weddingMusic === 'undefined' || !weddingMusic) return Promise.resolve();
+
+    if (!weddingMusic.paused) {
+      return Promise.resolve();
+    }
+
+    weddingMusic.volume = 0.18;
+    weddingMusic.loop = true;
+
+    return weddingMusic.play().then(function(){
+      // This flag is also set when Enter Invitation starts music.
+      sessionStorage.setItem('hasCurtainMusicPlayed', 'true');
+      if (typeof updateMusicButton === 'function') updateMusicButton(true);
+      updateGateMusicButton(true);
+    }).catch(function(error){
+      console.warn(
+        'Could not play remo-first-sight-background-score.mp3. ' +
+        'Keep the MP3 in the same folder as index.html.',
+        error
+      );
+    });
+  }
+
+  // Restore the correct curtain button state if this script runs after playback.
+  updateGateMusicButton(
+    typeof weddingMusic !== 'undefined' && weddingMusic && !weddingMusic.paused
+  );
 
 
   /* Curtain-only floating dots and heart particles. */
@@ -1354,22 +1435,16 @@ updateMusicButtons(!weddingMusic.paused);
     }
   }
 
-  enter.addEventListener('click', async function(){
+  enter.addEventListener('click', function(){
     if (opener.classList.contains('is-opening')) return;
 
     enter.disabled = true;
 
-    // If music is already playing from the curtain control, leave it alone.
-    // If it has not started yet (or was paused), start the same audio element.
-    if (weddingMusic.paused) {
-      const started = await ensureWeddingMusicPlaying();
-      if (started && !hasCurtainMusicPlayed) {
-        hasCurtainMusicPlayed = true;
-        sessionStorage.setItem('hasCurtainMusicPlayed', 'true');
-      }
-    }
+    // User interaction unlocks browser audio playback here.
+    // Music starts exactly when Enter Invitation is pressed.
+    startWeddingMusic();
 
-    // Start curtain opening without touching music playback.
+    // Start curtain opening.
     opener.classList.add('is-opening');
 
     window.setTimeout(function(){
