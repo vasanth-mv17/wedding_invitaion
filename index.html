@@ -483,7 +483,7 @@ footer small{opacity:.5;letter-spacing:.12em}
 .language-switcher button:focus-visible{outline:2px solid var(--gold-light);outline-offset:2px}
 [lang="ta"], .lang-ta{font-family:'Noto Sans Tamil','Jost',sans-serif}
 @media(max-width:650px){
-  .language-switcher{top:35px}
+  .language-switcher{top:10px}
   .language-switcher button{padding:7px 12px;min-width:62px}
 }
 @media(prefers-reduced-motion:reduce){.language-switcher{backdrop-filter:none}}
@@ -583,7 +583,7 @@ footer small{opacity:.5;letter-spacing:.12em}
   filter:brightness(1.03);
   animation:radiantNameGlow 2.8s ease-in-out infinite alternate}
 #curtain-opener .opener-amp{margin:12px 0;font-size:34px;color:var(--gold)}
-#curtain-opener .opener-date{position:relative;margin-top:40px;font-family:'Marcellus',serif;font-size:12px;letter-spacing:.18em;color:rgba(247,234,211,.88)}
+#curtain-opener .opener-date{position:relative;margin-top:20px;font-family:'Marcellus',serif;font-size:12px;letter-spacing:.18em;color:rgba(247,234,211,.88)}
 #curtain-opener .enter-invitation{position:relative;min-width:min(300px,72vw);min-height:56px;margin-top:32px;padding:13px 28px;border:1px solid #f4d58e;border-radius:999px;background:linear-gradient(180deg,#efd08a,#d8ae61);color:#3b0710;cursor:pointer;font-family:'Jost',sans-serif;font-size:13px;font-weight:500;letter-spacing:.12em;box-shadow:0 0 0 3px rgba(236,208,138,.045),0 8px 20px rgba(0,0,0,.26);transition:transform .25s ease,filter .25s ease}
 #curtain-opener .enter-invitation:hover{transform:translateY(-2px) scale(1.015);filter:brightness(1.06)}
 #curtain-opener .enter-invitation:focus-visible{outline:2px solid #fff0c2;outline-offset:4px}
@@ -618,43 +618,41 @@ footer small{opacity:.5;letter-spacing:.12em}
 @media(prefers-reduced-motion:reduce){#curtain-opener .curtain-panel,#curtain-opener .opener-center{transition-duration:.25s}#curtain-opener .opener-star{animation:none;opacity:.45}.names,#curtain-opener .opener-names{animation:none}}
 
 
-/* Controls placed inside the curtain gate */
+/* Curtain controls use the same combined pill structure as the hero section. */
 #curtain-opener .curtain-gate-controls{
   position:relative;
   z-index:8;
   display:flex;
   align-items:center;
   justify-content:center;
-  flex-wrap:wrap;
-  gap:10px;
-  margin:0 auto 28px;
+  width:max-content;
+  max-width:100%;
+  margin:0 auto 20px;
+  gap:0;
+  padding:4px;
+  background:rgba(38,4,10,.86);
+  border:1px solid rgba(200,156,80,.55);
+  border-radius:999px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
 }
 
 #curtain-opener .gate-language{
-  display:inline-flex;
-  padding:4px;
-  border:1px solid rgba(200,156,80,.62);
-  border-radius:999px;
-  background:rgba(20,2,7,.48);
-}
-
-#curtain-opener .gate-option,
-#curtain-opener .gate-music{
-  min-height:44px;
-  border:0;
-  border-radius:999px;
-  color:var(--gold-light);
-  background:transparent;
-  cursor:pointer;
-  font-family:'Jost',sans-serif;
-  font-size:11px;
-  letter-spacing:.05em;
-  transition:background .2s ease,color .2s ease,transform .2s ease;
+  display:contents;
 }
 
 #curtain-opener .gate-option{
-  min-width:82px;
-  padding:8px 15px;
+  border:0;
+  background:transparent;
+  color:var(--gold-light);
+  cursor:pointer;
+  padding:8px 16px;
+  border-radius:999px;
+  font:500 12px 'Jost',sans-serif;
+  letter-spacing:.05em;
+  min-width:72px;
+  min-height:44px;
+  transition:background .25s ease,color .25s ease;
 }
 
 #curtain-opener .gate-option.active,
@@ -664,11 +662,21 @@ footer small{opacity:.5;letter-spacing:.12em}
 }
 
 #curtain-opener .gate-music{
-  padding:8px 17px;
-  border:1px solid rgba(200,156,80,.62);
+  min-height:44px;
+  padding:8px 16px;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:var(--gold-light);
+  cursor:pointer;
   display:inline-flex;
   align-items:center;
+  justify-content:center;
   gap:7px;
+  font:500 12px 'Jost',sans-serif;
+  letter-spacing:.04em;
+  white-space:nowrap;
+  transition:background .25s ease,color .25s ease,transform .25s ease;
 }
 
 #curtain-opener .gate-music:hover{
@@ -677,7 +685,6 @@ footer small{opacity:.5;letter-spacing:.12em}
 }
 
 #curtain-opener .gate-music.is-playing{
-  border-color:var(--gold-light);
   background:rgba(200,156,80,.16);
   box-shadow:0 0 18px rgba(236,208,138,.16);
 }
@@ -695,12 +702,17 @@ footer small{opacity:.5;letter-spacing:.12em}
 
 @media(max-width:650px){
   #curtain-opener .curtain-gate-controls{
-    gap:7px;
-    margin-bottom:20px;
+    margin-bottom:16px;
+    padding:4px;
   }
   #curtain-opener .gate-option{
-    min-width:70px;
-    padding:7px 11px;
+    padding:7px 12px;
+    min-width:62px;
+    min-height:40px;
+  }
+  #curtain-opener .gate-music{
+    min-height:40px;
+    padding:7px 12px;
   }
 }
 
