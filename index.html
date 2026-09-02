@@ -620,27 +620,15 @@ footer small{opacity:.5;letter-spacing:.12em}
 
 /* Controls placed inside the curtain gate */
 #curtain-opener .curtain-gate-controls{
-  position:absolute;
-  top:24px;
-   left:24px;
-  right:24px;
-  z-index:20;
+  position:relative;
+  z-index:8;
   display:flex;
- align-items:flex-start;
-  justify-content:space-between;
+  align-items:center;
+  justify-content:center;
   flex-wrap:wrap;
   gap:10px;
-  margin:0;
-  pointer-events:none;
+  margin:0 auto 28px;
 }
-
-#curtain-opener .gate-language,
-#curtain-opener .gate-music{
-  pointer-events:auto;
-}
-#curtain-opener .gate-language{order:1}
-#curtain-opener .gate-music{order:2}
-
 
 #curtain-opener .gate-language{
   display:inline-flex;
@@ -707,9 +695,8 @@ footer small{opacity:.5;letter-spacing:.12em}
 
 @media(max-width:650px){
   #curtain-opener .curtain-gate-controls{
-    top:10px;
-    right:10px;
     gap:7px;
+    margin-bottom:20px;
   }
   #curtain-opener .gate-option{
     min-width:70px;
@@ -843,22 +830,21 @@ body:has(#curtain-opener) > .language-switcher {
   <span class="opener-star s3" aria-hidden="true"></span>
   <span class="opener-star s4" aria-hidden="true"></span>
   <span class="opener-star s5" aria-hidden="true"></span>
-  <div class="curtain-gate-controls" aria-label="Invitation options">
-    <div class="gate-language" role="group" aria-label="Language">
-      <button type="button" id="gateEnglish" class="gate-option active" aria-pressed="true">English</button>
-      <button type="button" id="gateTamil" class="gate-option" aria-pressed="false">தமிழ்</button>
-    </div>
-    <button type="button" id="gateMusic" class="gate-music"
-            aria-pressed="false"
-            aria-label="Play Remo music"
-            title="Play music">
-      <span class="gate-music-icon" aria-hidden="true">♫</span>
-      <span class="gate-music-label">Music</span>
-    </button>
-  </div>
-
   <div class="opener-center">
 
+    <div class="curtain-gate-controls" aria-label="Invitation options">
+      <div class="gate-language" role="group" aria-label="Language">
+        <button type="button" id="gateEnglish" class="gate-option active" aria-pressed="true">English</button>
+        <button type="button" id="gateTamil" class="gate-option" aria-pressed="false">தமிழ்</button>
+      </div>
+      <button type="button" id="gateMusic" class="gate-music"
+              aria-pressed="false"
+              aria-label="Play Remo music"
+              title="Play music">
+        <span class="gate-music-icon" aria-hidden="true">♫</span>
+        <span class="gate-music-label">Music</span>
+      </button>
+    </div>
     <div class="opener-arabic" aria-hidden="true">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
     <div class="opener-kicker">Together with their families<br>We invite you to celebrate the wedding of</div>
     <div class="opener-names">Arshak<div class="opener-amp">&amp;</div>Hajeera</div>
