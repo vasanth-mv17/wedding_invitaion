@@ -476,7 +476,7 @@ footer small{opacity:.5;letter-spacing:.12em}
 .language-switcher button:focus-visible{outline:2px solid var(--gold-light);outline-offset:2px}
 [lang="ta"], .lang-ta{font-family:'Noto Sans Tamil','Jost',sans-serif}
 @media(max-width:650px){
-  .language-switcher{top:35px}
+  .language-switcher{top:10px}
   .language-switcher button{padding:7px 12px;min-width:62px}
 }
 @media(prefers-reduced-motion:reduce){.language-switcher{backdrop-filter:none}}
@@ -657,6 +657,110 @@ body:has(#curtain-opener) > .language-switcher {
   pointer-events: none;
 }
 
+
+/* ============================================================
+   Curtain particle effect
+   Lightweight dots + hearts visible only on the curtain opener.
+   ============================================================ */
+#curtain-opener .curtain-particles{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+#curtain-opener .curtain-particle{
+  position:absolute;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:var(--gold-light);
+  box-shadow:0 0 9px rgba(236,208,138,.72);
+  opacity:0;
+  animation:curtainParticleRise var(--cp-duration) var(--cp-delay) ease-in-out infinite;
+}
+
+#curtain-opener .curtain-heart{
+  position:absolute;
+  width:9px;
+  height:9px;
+  opacity:0;
+  transform:rotate(-45deg);
+  animation:curtainHeartRise var(--cp-duration) var(--cp-delay) ease-in-out infinite;
+}
+
+#curtain-opener .curtain-heart::before,
+#curtain-opener .curtain-heart::after{
+  content:"";
+  position:absolute;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--gold-light);
+}
+
+#curtain-opener .curtain-heart::before{
+  top:-4.5px;
+  left:0;
+}
+
+#curtain-opener .curtain-heart::after{
+  top:0;
+  left:4.5px;
+}
+
+#curtain-opener .curtain-heart-core{
+  position:absolute;
+  inset:0;
+  background:var(--gold-light);
+  border-radius:2px;
+  z-index:-1;
+  box-shadow:0 0 11px rgba(236,208,138,.55);
+}
+
+@keyframes curtainParticleRise{
+  0%{
+    opacity:0;
+    transform:translate3d(0,24px,0) scale(.65);
+  }
+  18%{opacity:.65}
+  65%{opacity:.28}
+  100%{
+    opacity:0;
+    transform:translate3d(var(--cp-x),-150px,0) scale(1);
+  }
+}
+
+@keyframes curtainHeartRise{
+  0%{
+    opacity:0;
+    transform:translate3d(0,25px,0) rotate(-45deg) scale(.45);
+  }
+  18%{opacity:.58}
+  55%{opacity:.35}
+  100%{
+    opacity:0;
+    transform:translate3d(var(--cp-x),-175px,0) rotate(-45deg) scale(1);
+  }
+}
+
+#curtain-opener.is-opening .curtain-particles{
+  opacity:0;
+  transition:opacity .55s ease;
+}
+
+@media(prefers-reduced-motion:reduce){
+  #curtain-opener .curtain-particle,
+  #curtain-opener .curtain-heart{
+    animation:none;
+    opacity:.28;
+  }
+  #curtain-opener .curtain-particles{
+    transition:none;
+  }
+}
+
 </style>
 </head>
 
@@ -666,6 +770,7 @@ body:has(#curtain-opener) > .language-switcher {
 <section id="curtain-opener" aria-label="Wedding invitation opening">
   <div class="curtain-panel left" aria-hidden="true"></div>
   <div class="curtain-panel right" aria-hidden="true"></div>
+  <div class="curtain-particles" id="curtain-particles" aria-hidden="true"></div>
   <span class="opener-star s1" aria-hidden="true"></span>
   <span class="opener-star s2" aria-hidden="true"></span>
   <span class="opener-star s3" aria-hidden="true"></span>
@@ -679,10 +784,11 @@ body:has(#curtain-opener) > .language-switcher {
         <button type="button" id="gateTamil" class="gate-option" aria-pressed="false">தமிழ்</button>
       </div>
       <button type="button" id="gateMusic" class="gate-music"
-              aria-label="Music will start when entering the invitation"
-              title="Music starts when you enter">
-        <span aria-hidden="true">♫</span>
-        <span>Music</span>
+              aria-pressed="false"
+              aria-label="Play wedding music"
+              title="Play or pause music">
+        <span class="gate-music-icon" aria-hidden="true">♫</span>
+        <span id="gateMusicLabel">Music</span>
       </button>
     </div>
     <div class="opener-arabic" aria-hidden="true">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
@@ -1031,52 +1137,106 @@ if (directionsBtn) {
 /* Remo — First Sight Background Score */
 const musicToggle = document.getElementById('musicToggle');
 const musicLabel = document.getElementById('musicLabel');
+const gateMusic = document.getElementById('gateMusic');
+const gateMusicLabel = document.getElementById('gateMusicLabel');
 
+// One reusable audio element for the whole invitation.
 const weddingMusic = new Audio('remo-first-sight-background-score.mp3');
 weddingMusic.loop = true;
 weddingMusic.preload = 'auto';
 weddingMusic.volume = 0.18;
 
-function updateMusicButton(isPlaying) {
-  if (!musicToggle) return;
-  musicToggle.classList.toggle('is-playing', isPlaying);
-  musicToggle.setAttribute('aria-pressed', String(isPlaying));
-  musicToggle.setAttribute(
-    'aria-label',
-    isPlaying ? 'Pause Remo music' : 'Play Remo music'
-  );
-  musicToggle.title = isPlaying ? 'Pause music' : 'Play music';
+// Persist only the fact that the curtain music has been started during this session.
+let hasCurtainMusicPlayed = sessionStorage.getItem('hasCurtainMusicPlayed') === 'true';
 
-  if (musicLabel) musicLabel.textContent = isPlaying ? 'Pause' : 'Music';
+function updateMusicButtons(isPlaying) {
+  // Main invitation music control.
+  if (musicToggle) {
+    musicToggle.classList.toggle('is-playing', isPlaying);
+    musicToggle.setAttribute('aria-pressed', String(isPlaying));
+    musicToggle.setAttribute(
+      'aria-label',
+      isPlaying ? 'Pause Remo music' : 'Play Remo music'
+    );
+    musicToggle.title = isPlaying ? 'Pause music' : 'Play music';
+    if (musicLabel) musicLabel.textContent = isPlaying ? 'Pause' : 'Music';
 
-  const icon = musicToggle.querySelector('.music-icon');
-  if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
+    const icon = musicToggle.querySelector('.music-icon');
+    if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
+  }
+
+  // Curtain music control. Keep its state synchronized with the same audio.
+  if (gateMusic) {
+    gateMusic.classList.toggle('is-playing', isPlaying);
+    gateMusic.setAttribute('aria-pressed', String(isPlaying));
+    gateMusic.setAttribute(
+      'aria-label',
+      isPlaying ? 'Pause wedding music' : 'Play wedding music'
+    );
+    gateMusic.title = isPlaying ? 'Pause music' : 'Play music';
+    if (gateMusicLabel) gateMusicLabel.textContent = isPlaying ? 'Pause' : 'Music';
+
+    const icon = gateMusic.querySelector('.gate-music-icon');
+    if (icon) icon.textContent = isPlaying ? '❚❚' : '♫';
+  }
 }
 
+async function playWeddingMusic() {
+  try {
+    // Calling play() on an already-playing audio element does not reset its position.
+    if (weddingMusic.paused) {
+      await weddingMusic.play();
+    }
+    updateMusicButtons(true);
+    return true;
+  } catch (error) {
+    console.warn(
+      'Could not play remo-first-sight-background-score.mp3. ' +
+      'Place the MP3 in the same folder as the HTML file.',
+      error
+    );
+    updateMusicButtons(false);
+    return false;
+  }
+}
+
+function pauseWeddingMusic() {
+  weddingMusic.pause();
+  updateMusicButtons(false);
+}
+
+// Curtain music control: toggle play/pause without creating a second Audio object.
+if (gateMusic) {
+  gateMusic.addEventListener('click', async () => {
+    if (weddingMusic.paused) {
+      const started = await playWeddingMusic();
+      if (started) {
+        hasCurtainMusicPlayed = true;
+        sessionStorage.setItem('hasCurtainMusicPlayed', 'true');
+      }
+    } else {
+      pauseWeddingMusic();
+    }
+  });
+}
+
+// Main invitation music control uses the same audio element.
 if (musicToggle) {
   musicToggle.addEventListener('click', async () => {
     if (weddingMusic.paused) {
-      try {
-        await weddingMusic.play();
-        updateMusicButton(true);
-      } catch (error) {
-        console.warn(
-          'Could not play remo-first-sight-background-score.mp3. ' +
-          'Place the MP3 in the same folder as index.html.',
-          error
-        );
-        if (musicLabel) musicLabel.textContent = 'Add MP3';
-      }
+      await playWeddingMusic();
     } else {
-      weddingMusic.pause();
-      updateMusicButton(false);
+      pauseWeddingMusic();
     }
   });
-
-  weddingMusic.addEventListener('play', () => updateMusicButton(true));
-  weddingMusic.addEventListener('pause', () => updateMusicButton(false));
 }
 
+weddingMusic.addEventListener('play', () => updateMusicButtons(true));
+weddingMusic.addEventListener('pause', () => updateMusicButtons(false));
+weddingMusic.addEventListener('ended', () => updateMusicButtons(false));
+
+// Initialize both controls from the current audio state.
+updateMusicButtons(!weddingMusic.paused);
 </script>
 
 
@@ -1088,7 +1248,6 @@ if (musicToggle) {
   const enter = document.getElementById('enter-invitation');
   const gateEnglish = document.getElementById('gateEnglish');
   const gateTamil = document.getElementById('gateTamil');
-  const gateMusic = document.getElementById('gateMusic');
 
   if (!opener || !enter) return;
 
@@ -1137,56 +1296,80 @@ if (musicToggle) {
     setGateLanguage('ta');
   });
 
-  // This button is intentionally only an indicator/control.
-  // Music must START when "Enter Invitation" is clicked.
-  gateMusic.addEventListener('click', function(){
-    gateMusic.setAttribute(
-      'aria-label',
-      'Music will start automatically when you enter the invitation'
-    );
-  });
-
-  function startWeddingMusic() {
-    // The existing music script creates this exact Audio object.
-    if (typeof weddingMusic !== 'undefined' && weddingMusic) {
-      weddingMusic.volume = 0.18;
-      weddingMusic.loop = true;
-      return weddingMusic.play().then(function(){
-        if (typeof updateMusicButton === 'function') {
-          updateMusicButton(true);
-        }
-      }).catch(function(error){
-        console.warn('Music could not start:', error);
-      });
+  // Curtain music control is implemented by the shared audio logic above.
+  // Enter Invitation must never pause, reset, or replace the audio element.
+  async function ensureWeddingMusicPlaying() {
+    if (typeof playWeddingMusic === 'function') {
+      return playWeddingMusic();
     }
-
-    // Fallback in case the existing music script is not initialized yet.
-    if (!window.__weddingOpeningMusic) {
-      window.__weddingOpeningMusic =
-        new Audio('remo-first-sight-background-score.mp3');
-      window.__weddingOpeningMusic.loop = true;
-      window.__weddingOpeningMusic.volume = 0.18;
-    }
-
-    return window.__weddingOpeningMusic.play().catch(function(error){
-      console.warn(
-        'Could not play remo-first-sight-background-score.mp3. ' +
-        'Keep the MP3 in the same folder as index.html.',
-        error
-      );
-    });
+    return false;
   }
 
-  enter.addEventListener('click', function(){
+
+  /* Curtain-only floating dots and heart particles. */
+  const curtainParticleLayer = document.getElementById('curtain-particles');
+
+  if (curtainParticleLayer) {
+    for (let i = 0; i < 34; i++) {
+      const p = document.createElement('span');
+      p.className = 'curtain-particle';
+
+      // Keep particles spread across both curtain panels while leaving
+      // the center invitation card visually clean.
+      const side = Math.random() < 0.5 ? 'left' : 'right';
+      const x = side === 'left'
+        ? (2 + Math.random() * 45)
+        : (53 + Math.random() * 45);
+
+      p.style.left = x + '%';
+      p.style.top = (8 + Math.random() * 88) + '%';
+      p.style.setProperty('--cp-x', (Math.random() * 90 - 45) + 'px');
+      p.style.setProperty('--cp-duration', (5.5 + Math.random() * 5) + 's');
+      p.style.setProperty('--cp-delay', (-Math.random() * 9) + 's');
+      p.style.transform = `scale(${0.55 + Math.random() * 0.85})`;
+
+      curtainParticleLayer.appendChild(p);
+    }
+
+    for (let i = 0; i < 10; i++) {
+      const heart = document.createElement('span');
+      heart.className = 'curtain-heart';
+
+      const core = document.createElement('span');
+      core.className = 'curtain-heart-core';
+      heart.appendChild(core);
+
+      const side = Math.random() < 0.5 ? 'left' : 'right';
+      const x = side === 'left'
+        ? (4 + Math.random() * 42)
+        : (54 + Math.random() * 42);
+
+      heart.style.left = x + '%';
+      heart.style.top = (18 + Math.random() * 76) + '%';
+      heart.style.setProperty('--cp-x', (Math.random() * 80 - 40) + 'px');
+      heart.style.setProperty('--cp-duration', (6 + Math.random() * 5) + 's');
+      heart.style.setProperty('--cp-delay', (-Math.random() * 10) + 's');
+
+      curtainParticleLayer.appendChild(heart);
+    }
+  }
+
+  enter.addEventListener('click', async function(){
     if (opener.classList.contains('is-opening')) return;
 
     enter.disabled = true;
 
-    // User interaction unlocks browser audio playback here.
-    // Music starts exactly when Enter Invitation is pressed.
-    startWeddingMusic();
+    // If music is already playing from the curtain control, leave it alone.
+    // If it has not started yet (or was paused), start the same audio element.
+    if (weddingMusic.paused) {
+      const started = await ensureWeddingMusicPlaying();
+      if (started && !hasCurtainMusicPlayed) {
+        hasCurtainMusicPlayed = true;
+        sessionStorage.setItem('hasCurtainMusicPlayed', 'true');
+      }
+    }
 
-    // Start curtain opening.
+    // Start curtain opening without touching music playback.
     opener.classList.add('is-opening');
 
     window.setTimeout(function(){
