@@ -1277,6 +1277,19 @@ if (musicToggle) {
     const kicker = opener.querySelector('.opener-kicker');
     const date = opener.querySelector('.opener-date');
     const note = opener.querySelector('.opener-note');
+    const names = opener.querySelector('.opener-names');
+    const enterButton = opener.querySelector('#enter-invitation');
+
+    if (names) {
+  names.innerHTML = tamil
+    ? 'அர்ஷக்<div class="opener-amp">&amp;</div>ஹஜீரா'
+    : 'Arshak<div class="opener-amp">&amp;</div>Hajeera';
+}
+    if (enterButton) {
+  enterButton.innerHTML = tamil
+    ? 'அழைப்பிதழைத் திறக்கவும் ♥'
+    : 'ENTER INVITATION ♥';
+}
 
     if (kicker) {
       kicker.innerHTML = tamil
@@ -1286,8 +1299,8 @@ if (musicToggle) {
 
     if (date) {
       date.textContent = tamil
-        ? 'ஞாயிற்றுக்கிழமை · அக்டோபர் 18 · 2026 · காலை 11:30 மணி'
-        : 'SUNDAY · OCTOBER 18 · 2026 · 11:30 AM';
+        ? 'ஞாயிற்றுக்கிழமை · அக்டோபர் 18 · 2026ி'
+        : 'SUNDAY · OCTOBER 18 · 2026';
     }
 
     if (note) {
