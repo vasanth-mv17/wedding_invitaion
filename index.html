@@ -622,15 +622,25 @@ footer small{opacity:.5;letter-spacing:.12em}
 #curtain-opener .curtain-gate-controls{
   position:absolute;
   top:24px;
+   left:24px;
   right:24px;
   z-index:20;
   display:flex;
-  align-items:center;
-  justify-content:flex-end;
+ align-items:flex-start;
+  justify-content:space-between;
   flex-wrap:wrap;
   gap:10px;
   margin:0;
+  pointer-events:none;
 }
+
+#curtain-opener .gate-language,
+#curtain-opener .gate-music{
+  pointer-events:auto;
+}
+#curtain-opener .gate-language{order:1}
+#curtain-opener .gate-music{order:2}
+
 
 #curtain-opener .gate-language{
   display:inline-flex;
@@ -852,7 +862,7 @@ body:has(#curtain-opener) > .language-switcher {
     <div class="opener-arabic" aria-hidden="true">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
     <div class="opener-kicker">Together with their families<br>We invite you to celebrate the wedding of</div>
     <div class="opener-names">Arshak<div class="opener-amp">&amp;</div>Hajeera</div>
-    <div class="opener-date">SUNDAY · OCTOBER 18 · 2026 · 11:30 AM</div>
+    <div class="opener-date">SUNDAY · OCTOBER 18 · 2026</div>
     <button type="button" class="enter-invitation" id="enter-invitation">ENTER INVITATION ♥</button>
     <div class="opener-note">Two hearts, one beautiful journey.<br>A lifetime of love begins...</div>
   </div>
