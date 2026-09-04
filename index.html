@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arsh ❤️ Haji | Wedding Invitation</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- Curtain opener overlay. The invitation below is unchanged. -->
+<section id="curtain-opener" aria-label="Wedding invitation opening">
+  <div class="curtain-panel left" aria-hidden="true"></div>
+  <div class="curtain-panel right" aria-hidden="true"></div>
+  <div class="curtain-particles" id="curtain-particles" aria-hidden="true"></div>
+  <span class="opener-star s1" aria-hidden="true"></span>
+  <span class="opener-star s2" aria-hidden="true"></span>
+  <span class="opener-star s3" aria-hidden="true"></span>
+  <span class="opener-star s4" aria-hidden="true"></span>
+  <span class="opener-star s5" aria-hidden="true"></span>
+  <div class="opener-center">
+
+    <div class="curtain-gate-controls" aria-label="Invitation options">
+      <div class="gate-language" role="group" aria-label="Language">
+        <button type="button" id="gateEnglish" class="gate-option active" aria-pressed="true">English</button>
+        <button type="button" id="gateTamil" class="gate-option" aria-pressed="false">தமிழ்</button>
+      </div>
+      <button type="button" id="gateMusic" class="gate-music"
+              aria-pressed="false"
+              aria-label="Play Remo music"
+              title="Play music">
+        <span class="gate-music-icon" aria-hidden="true">♫</span>
+        <span class="gate-music-label">Music</span>
+      </button>
+    </div>
+    <div class="opener-arabic" aria-hidden="true">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+    <div class="opener-kicker">Together with their families<br>We invite you to celebrate the wedding of</div>
+    <div class="opener-names">Arshak<div class="opener-amp">&amp;</div>Hajeera</div>
+    <div class="opener-date">SUNDAY · OCTOBER 18 · 2026</div>
+    <button type="button" class="enter-invitation" id="enter-invitation">ENTER INVITATION ♥</button>
+    <div class="opener-note">Two hearts, one beautiful journey.<br>A lifetime of love begins...</div>
+  </div>
+</section>
+
+<div class="language-switcher" aria-label="Language selection">
+  <button type="button" id="langEnglish" class="active" aria-pressed="true">English</button>
+  <button type="button" id="langTamil" aria-pressed="false">தமிழ்</button>
+    <button type="button" id="musicToggle" class="music-toggle"
+            aria-pressed="false" aria-label="Play Remo music" title="Play music">
+      <span class="music-icon" aria-hidden="true">♫</span>
+      <span id="musicLabel">Music</span>
+    </button>
+</div>
+<div class="particles" id="particles" aria-hidden="true"></div>
+
+<main class="page">
+
+<!-- HERO / OPENING -->
+<section class="section hero" id="home">
+  <div class="pattern"></div>
+  <div class="border"></div>
+  <div class="lantern left"></div>
+  <div class="lantern right"></div>
+  <div class="mosque"></div>
+
+  <div class="content">
+    <div class="arabic">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+    <div class="kicker" data-i18n="heroKicker">WITH THE BLESSINGS OF ALLAH<br>WE INVITE YOU TO CELEBRATE</div>
+
+    <div class="names" data-i18n="arshak">Arshak</div>
+    <div class="amp">&amp;</div>
+    <div class="names" data-i18n="hajeera">Hajeera</div>
+
+    <div class="ornament">— ◆ ♥ ◆ —</div>
+    <div class="hero-date" data-i18n="heroDate">SUNDAY, OCTOBER 18, 2026 · 11:30 AM</div>
+    <div class="scroll" data-i18n="scroll">↓ &nbsp; SCROLL TO EXPLORE &nbsp; ↓</div>
+  </div>
+</section>
+
+<!-- OUR STORY -->
+<section class="section story" id="story">
+  <div class="pattern"></div>
+  <div class="border"></div>
+  <div class="lantern left"></div>
+  <div class="lantern right"></div>
+  <div class="mosque"></div>
+
+  <div class="content">
+    <div class="kicker" data-i18n="storyKicker">OUR STORY</div>
+    <h2 class="story-title" data-i18n="storyTitle">Two Hearts. One Prayer.</h2>
+    <div class="ornament">— ♥ —</div>
+    <p class="story-text" data-i18n="storyText">
+      A journey written by Allah,<br>
+      woven with love, trust and destiny.<br>
+      Together, we seek His pleasure<br>
+      and look forward to a lifetime<br>
+      of endless barakah.
+    </p>
+    <div class="ornament">— ♥ —</div>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="section countdown" id="countdown">
+  <div class="pattern"></div>
+  <div class="border"></div>
+  <div class="mosque"></div>
+
+  <div class="content">
+    <div class="moon" aria-hidden="true"></div>
+    <div class="kicker" data-i18n="countKicker">THE COUNTDOWN</div>
+    <h2 class="count-title" data-i18n="countTitle">Until Our Nikah</h2>
+    <div class="count-date" data-i18n="countDate">SUNDAY, OCTOBER 18, 2026 · 11:30 AM</div>
+
+    <div class="timer" role="timer" aria-label="Countdown to the wedding">
+      <div class="timer-card"><span class="number" id="days">00</span><span class="label" data-i18n="daysLabel">Days</span></div>
+      <div class="timer-card"><span class="number" id="hours">00</span><span class="label" data-i18n="hoursLabel">Hours</span></div>
+      <div class="timer-card"><span class="number" id="minutes">00</span><span class="label" data-i18n="minutesLabel">Minutes</span></div>
+      <div class="timer-card"><span class="number" id="seconds">00</span><span class="label" data-i18n="secondsLabel">Seconds</span></div>
+    </div>
+
+    <p class="note" id="countNote" data-i18n="countNote">Counting down to the beginning of our beautiful journey together</p>
+  </div>
+</section>
+
+<!-- EVENT DETAILS -->
+<section class="section details" id="details">
+  <div class="pattern"></div>
+  <div class="border"></div>
+
+  <div class="content">
+    <div class="kicker" data-i18n="specialKicker">THE SPECIAL DAY</div>
+    <h2 class="section-title" data-i18n="joinUs">Join Us</h2>
+
+    <div class="detail-grid">
+      <div class="detail">
+        <h3 data-i18n="dateHeading">DATE</h3>
+        <p>
+          <span data-i18n="eventDate">Sunday, October 18, 2026</span><br>
+          <span data-i18n="eventTime">11:30 AM</span>
+        </p>
+      </div>
+
+      <div class="detail">
+        <h3 data-i18n="venueHeading">VENUE</h3>
+        <p>
+          <strong data-i18n="venueName">MS Mahal</strong><br>
+          <span data-i18n="address">Old No. 41, New No. 48,<br>
+          C.P. Kovil Street, Royapettah,<br>
+          Chennai – 600 014<br></span>
+          <span style="font-size:14px;opacity:.72;" data-i18n="landmark">
+            (Opp. Amir Mahal, near Express Avenue)
+          </span>
+        </p>
+
+        <a
+          href="https://www.google.com/maps/place/M+S+Mahal/@13.058919,80.2682053,960m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3a5266227ebdcf03:0xaddd5a7056300a70!8m2!3d13.058919!4d80.2682053!16s%2Fg%2F11byx8q8qc?entry=ttu&g_ep=EgoyMDI2MDgzMC4wIKXMDSoASAFQAw%3D%3D"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="directions-btn"
+          id="directionsBtn"
+        >
+          <span data-i18n="directions">📍 Get Directions</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="border"></div>
+  <div class="content">
+    <div class="ornament">◆ ♥ ◆</div>
+    <h2 data-i18n="footerNames">Arshak &amp; Hajeera</h2>
+    <p class="verse" data-i18n="verse">“And We created you in pairs.”</p>
+    <p>[Quran 78:8]</p>
+    <div class="ornament">— ✦ —</div>
+    <small data-i18n="footerSmall">WITH LOVE, PRAYERS &amp; BLESSINGS</small>
+  </div>
+</footer>
+
+</main>
+
+
+<script src="script.js"></script>
+
+
+
+</body>
+</html>
