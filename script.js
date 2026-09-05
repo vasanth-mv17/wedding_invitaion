@@ -115,7 +115,7 @@ if (directionsBtn) {
 (function(){
   const translations = {
     en: {
-      heroKicker:'WITH THE BLESSINGS OF ALLAH<br>WE INVITE YOU TO CELEBRATE',
+      heroKicker:'WITH THE BLESSINGS OF ALLAH<br>WE INVITE YOU TO CELEBRATE THE WEDDING OF',
       arshak:'Arshak', hajeera:'Hajeera',
       heroDate:'SUNDAY, OCTOBER 18, 2026 · 11:30 AM',
       scroll:'↓ &nbsp; SCROLL TO EXPLORE &nbsp; ↓',
