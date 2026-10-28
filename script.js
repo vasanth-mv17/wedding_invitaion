@@ -180,9 +180,15 @@ if (directionsBtn) {
   if(note){
     const observer=new MutationObserver(()=>{
       if(note.textContent.includes('Alhamdulillah')){
-        note.innerHTML=document.documentElement.lang==='ta'
+        const translatedMessage = document.documentElement.lang === 'ta'
           ? 'அல்ஹம்துலில்லாஹ் — எங்கள் சிறப்பு நாள் வந்துவிட்டது!'
           : 'Alhamdulillah — our special day has arrived!';
+
+        // Avoid repeatedly changing the same text, which can create an
+        // endless MutationObserver loop after the wedding date has passed.
+        if (note.textContent !== translatedMessage) {
+          note.textContent = translatedMessage;
+        }
       }
     });
     observer.observe(note,{childList:true,characterData:true,subtree:true});
